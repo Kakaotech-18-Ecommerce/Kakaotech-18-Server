@@ -37,3 +37,19 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.withType(JavaCompile).configureEach {
+	javaCompiler.set(javaToolchains.compilerFor {
+		languageVersion.set(JavaLanguageVersion.of(17))
+	})
+}
+
+// Ensure toolchains can be downloaded if not available locally
+javaToolchains {
+	repositories {
+		mavenCentral()
+		maven {
+			url = uri("https://download.java.net/java/GA/jdk17/latest/binaries/")
+		}
+	}
+}
