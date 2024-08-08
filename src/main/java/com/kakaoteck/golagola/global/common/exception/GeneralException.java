@@ -1,4 +1,4 @@
-package com.example.alcohol_free_day.global.common.exception;
+package com.kakaoteck.golagola.global.common.exception;
 
 import com.kakaoteck.golagola.global.common.code.BaseErrorCode;
 import com.kakaoteck.golagola.global.common.code.ErrorReasonDTO;
