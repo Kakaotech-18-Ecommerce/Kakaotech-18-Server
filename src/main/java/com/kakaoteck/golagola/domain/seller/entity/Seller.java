@@ -31,13 +31,30 @@ public class Seller extends BaseEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long sellerId;
 
+    @Column(nullable = false)
     private String nickname;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Gender gender;
+
+    @Column(nullable = false)
     private String email;
+
+    @Column(nullable = false)
     private String address;
+
+    @Column(nullable = false)
     private String phoneNum;
+
+    @Column(nullable = false)
     private Role role;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private String realName;
+
+    @Column(nullable = false)
     private LocalDate registerDate;
 
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
@@ -79,5 +96,23 @@ public class Seller extends BaseEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
+    }
+
+    public static Seller from(Long sellerId, String nickname, Gender gender, String email,
+                              String address, String phoneNum, Role role, String realName,
+                              LocalDate registerDate, List<Product> productList, List<Order> orderList) {
+        return Seller.builder()
+                .sellerId(sellerId)
+                .nickname(nickname)
+                .gender(gender)
+                .email(email)
+                .address(address)
+                .phoneNum(phoneNum)
+                .role(role)
+                .realName(realName)
+                .registerDate(registerDate)
+                .productList(productList)
+                .orderList(orderList)
+                .build();
     }
 }

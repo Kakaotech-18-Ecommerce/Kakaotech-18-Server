@@ -28,15 +28,32 @@ public class Buyer extends BaseEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long BuyerId;
+    private Long buyerId;
 
+    @Column(nullable = false)
     private String nickname;
+
+    @Column(nullable = false)
     private String realName;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Gender gender;
+
+    @Column(nullable = false)
     private String email;
+
+    @Column(nullable = false)
     private String address;
+
+    @Column(nullable = false)
     private String phoneNum;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role;
+
+    @Column(nullable = false)
     private LocalDate registerDate;
 
     @OneToOne(mappedBy = "buyer", cascade = CascadeType.ALL)
@@ -47,7 +64,6 @@ public class Buyer extends BaseEntity implements UserDetails {
 
     @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
     private List<Order> orderList;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -83,4 +99,20 @@ public class Buyer extends BaseEntity implements UserDetails {
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
     }
+
+    public static Buyer from(Long buyerId, String nickname, String realName, Gender gender, String email,
+                             String address, String phoneNum, Role role, LocalDate registerDate) {
+        return Buyer.builder()
+                .buyerId(buyerId)
+                .nickname(nickname)
+                .realName(realName)
+                .gender(gender)
+                .email(email)
+                .address(address)
+                .phoneNum(phoneNum)
+                .role(role)
+                .registerDate(registerDate)
+                .build();
+    }
+
 }
