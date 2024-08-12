@@ -1,8 +1,10 @@
 package com.kakaoteck.golagola.domain.seller.entity;
 
 import com.fasterxml.jackson.databind.ser.Serializers;
+import com.kakaoteck.golagola.domain.buyer.dto.BuyerRequest;
 import com.kakaoteck.golagola.domain.order.entity.Order;
 import com.kakaoteck.golagola.domain.product.entity.Product;
+import com.kakaoteck.golagola.domain.seller.dto.SellerRequest;
 import com.kakaoteck.golagola.global.common.BaseEntity;
 import com.kakaoteck.golagola.global.common.enums.Gender;
 import com.kakaoteck.golagola.global.common.enums.Role;
@@ -101,6 +103,12 @@ public class Seller extends BaseEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void updateProfile(SellerRequest.MyPagePutDto request) {
+        this.nickname = request.nickname();
+        this.address = request.address();
+        this.phoneNum = request.phoneNum();
     }
 
     public static Seller from(Long sellerId, String nickname, Gender gender, String email, String password,

@@ -36,29 +36,21 @@ public class ApplicationConfig {
 
             if (buyer != null) {
                 System.out.println("Buyer found: " + username);
-                return new org.springframework.security.core.userdetails.User(
-                        buyer.getEmail(),
-                        buyer.getPassword(),
-                        Collections.singleton(new SimpleGrantedAuthority("BUYER"))
-                );
+                return buyer;  // Buyer 객체를 반환
             }
 
             // Try to find the user as a Seller
             Seller seller = sellerRepository.findByEmail(username).orElse(null);
 
             if (seller != null) {
-                System.out.println("Seller found: " + username);
-                System.out.println("Encoded password: " + seller.getPassword());
-                return new org.springframework.security.core.userdetails.User(
-                        seller.getEmail(),
-                        seller.getPassword(),
-                        Collections.singleton(new SimpleGrantedAuthority("SELLER"))
-                );
+                System.out.println("Seller loaded: " + seller.getEmail());
+                return seller;  // Seller 객체를 반환
             }
 
             throw new UsernameNotFoundException("User not found with username: " + username);
         };
     }
+
 
 
     @Bean

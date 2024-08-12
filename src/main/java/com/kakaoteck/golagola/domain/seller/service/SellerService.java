@@ -1,5 +1,6 @@
 package com.kakaoteck.golagola.domain.seller.service;
 
+import com.kakaoteck.golagola.domain.seller.dto.SellerRequest;
 import com.kakaoteck.golagola.domain.seller.dto.SellerResponse;
 import com.kakaoteck.golagola.domain.seller.entity.Seller;
 import com.kakaoteck.golagola.domain.seller.repository.SellerRepository;
@@ -26,6 +27,21 @@ public class SellerService {
                 .gender(seller.getGender())
                 .phoneNum(seller.getPhoneNum())
                 .nickname(seller.getNickname())
+                .build();
+    }
+
+    public SellerResponse updateMyPage(Seller seller, SellerRequest.MyPagePutDto request) {
+        seller.updateProfile(request);
+        Seller savedSeller = sellerRepository.save(seller);
+        return SellerResponse.builder()
+                .email(savedSeller.getEmail())
+                .role(savedSeller.getRole())
+                .address(savedSeller.getAddress())
+                .registerDate(savedSeller.getRegisterDate())
+                .realName(savedSeller.getRealName())
+                .gender(savedSeller.getGender())
+                .phoneNum(savedSeller.getPhoneNum())
+                .nickname(savedSeller.getNickname())
                 .build();
     }
 }
