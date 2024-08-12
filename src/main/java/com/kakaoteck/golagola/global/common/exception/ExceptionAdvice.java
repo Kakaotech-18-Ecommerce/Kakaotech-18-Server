@@ -72,8 +72,8 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         return handleExceptionInternalFalse(e, ErrorStatus._INTERNAL_SERVER_ERROR, HttpHeaders.EMPTY, ErrorStatus._INTERNAL_SERVER_ERROR.getHttpStatus(), request, e.getMessage());
     }
 
-    @ExceptionHandler(value = com.example.alcohol_free_day.global.common.exception.GeneralException.class)
-    public ResponseEntity onThrowException(com.example.alcohol_free_day.global.common.exception.GeneralException generalException, HttpServletRequest request) {
+    @ExceptionHandler(value = com.kakaoteck.golagola.global.common.exception.GeneralException.class)
+    public ResponseEntity onThrowException(com.kakaoteck.golagola.global.common.exception.GeneralException generalException, HttpServletRequest request) {
         ErrorReasonDTO errorReasonHttpStatus = generalException.getErrorReasonHttpStatus();
         return handleExceptionInternal(generalException, errorReasonHttpStatus, null, request);
     }
