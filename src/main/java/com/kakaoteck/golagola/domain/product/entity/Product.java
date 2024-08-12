@@ -1,5 +1,6 @@
 package com.kakaoteck.golagola.domain.product.entity;
 
+import com.kakaoteck.golagola.domain.cart.entity.Cart;
 import com.kakaoteck.golagola.domain.review.entity.Review;
 import com.kakaoteck.golagola.domain.seller.entity.Seller;
 import com.kakaoteck.golagola.global.common.BaseEntity;
@@ -29,6 +30,10 @@ public class Product extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
     private Seller seller;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 
     private String productName;
     private String productExplanation;
