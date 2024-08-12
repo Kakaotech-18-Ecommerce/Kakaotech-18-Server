@@ -30,13 +30,28 @@ public class Buyer extends BaseEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long BuyerId;
 
+    @Column(nullable = false)
     private String nickname;
+
+    @Column(nullable = false)
     private String realName;
+
+    @Column(nullable = false)
     private Gender gender;
+
+    @Column(nullable = false)
     private String email;
+
+    @Column(nullable = false)
     private String address;
+
+    @Column(nullable = false)
     private String phoneNum;
+
+    @Column(nullable = false)
     private Role role;
+
+    @Column(nullable = false)
     private LocalDate registerDate;
 
     @OneToOne(mappedBy = "buyer", cascade = CascadeType.ALL)
@@ -47,7 +62,6 @@ public class Buyer extends BaseEntity implements UserDetails {
 
     @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
     private List<Order> orderList;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -83,4 +97,6 @@ public class Buyer extends BaseEntity implements UserDetails {
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
     }
+
+
 }
