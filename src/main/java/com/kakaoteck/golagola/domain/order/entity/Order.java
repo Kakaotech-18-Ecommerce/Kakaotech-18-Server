@@ -27,11 +27,11 @@ public class Order extends BaseEntity {
     private Long orderId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id")
+    @JoinColumn(name = "seller_id", nullable = false)
     private Seller seller;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "buyer_id")
+    @JoinColumn(name = "buyer_id", nullable = false)
     private Buyer buyer;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)

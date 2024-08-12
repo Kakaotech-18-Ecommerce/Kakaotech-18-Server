@@ -22,16 +22,26 @@ public class OrderProduct {
     private Long orderProductId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "order_id"m nullable = false)
     private Order order;
 
     @OneToOne(mappedBy = "orderProduct", cascade = CascadeType.ALL)
     private Review review;
 
+    @Column(nullable = false)
     private Long quantity;
+
+    @Column(nullable = false)
     private Long orderPrice;
+
+    public static OrderProduct from(Long quantity, Long orderPrice) {
+        return OrderProduct.builder()
+                .quantity(quantity)
+                .orderPrice(orderPrice)
+                .build();
+    }
 }

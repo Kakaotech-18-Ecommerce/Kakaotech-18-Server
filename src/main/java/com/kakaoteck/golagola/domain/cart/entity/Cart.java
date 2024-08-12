@@ -19,7 +19,7 @@ import java.util.List;
 public class Cart {
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "buyer_id")
+    @JoinColumn(name = "buyer_id", nullable = false)
     private Buyer buyer;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
