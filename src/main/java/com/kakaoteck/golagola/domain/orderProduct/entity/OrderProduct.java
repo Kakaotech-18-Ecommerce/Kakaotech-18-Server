@@ -1,4 +1,4 @@
-package com.kakaoteck.golagola.domain.cart.entity;
+package com.kakaoteck.golagola.domain.orderProduct.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,13 +9,15 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
 @Builder
-@Table(name = "cart_table")
-public class Cart {
+@Getter
+@Table(name = "order_product_table")
+public class OrderProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long cartId;
+    private Long orderProductId;
 
+    private Long quantity;
+    private Long orderPrice;
 }
