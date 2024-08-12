@@ -1,8 +1,9 @@
-package com.kakaoteck.golagola.domain.buyer.entity;
+package com.kakaoteck.golagola.domain.seller.entity;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
+import com.kakaoteck.golagola.global.common.BaseEntity;
 import com.kakaoteck.golagola.global.common.enums.Gender;
 import com.kakaoteck.golagola.global.common.enums.Role;
-import com.kakaoteck.golagola.global.common.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,21 +23,20 @@ import java.util.Collection;
 @AllArgsConstructor
 @Builder
 @Getter
-public class Buyer extends BaseEntity implements UserDetails {
+public class Seller extends BaseEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long BuyerId;
+    private Long sellerId;
 
     private String nickname;
-    private String realName;
     private Gender gender;
     private String email;
     private String address;
     private String phoneNum;
     private Role role;
+    private String realName;
     private LocalDate registerDate;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
