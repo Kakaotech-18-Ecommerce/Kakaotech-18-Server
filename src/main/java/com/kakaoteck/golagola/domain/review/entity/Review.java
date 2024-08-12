@@ -1,6 +1,7 @@
 package com.kakaoteck.golagola.domain.review.entity;
 
 import com.kakaoteck.golagola.domain.buyer.entity.Buyer;
+import com.kakaoteck.golagola.domain.product.entity.Product;
 import com.kakaoteck.golagola.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,10 @@ public class Review extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buyer_id")
     private Buyer buyer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

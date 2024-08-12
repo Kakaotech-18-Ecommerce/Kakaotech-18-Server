@@ -1,6 +1,7 @@
 package com.kakaoteck.golagola.domain.product.entity;
 
 import com.kakaoteck.golagola.domain.cart.entity.Cart;
+import com.kakaoteck.golagola.domain.orderProduct.entity.OrderProduct;
 import com.kakaoteck.golagola.domain.review.entity.Review;
 import com.kakaoteck.golagola.domain.seller.entity.Seller;
 import com.kakaoteck.golagola.global.common.BaseEntity;
@@ -34,6 +35,12 @@ public class Product extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id")
     private Cart cart;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<Review> reviewList;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<OrderProduct> orderProductList;
 
     private String productName;
     private String productExplanation;
