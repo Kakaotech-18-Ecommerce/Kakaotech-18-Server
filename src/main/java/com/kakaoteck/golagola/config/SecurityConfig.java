@@ -1,4 +1,4 @@
-package com.kakaoteck.golagola.config.util;
+package com.kakaoteck.golagola.config;
 
 import com.kakaoteck.golagola.security.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;

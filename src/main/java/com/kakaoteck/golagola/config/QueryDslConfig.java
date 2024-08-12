@@ -1,4 +1,4 @@
-package com.kakaoteck.golagola.config.util;
+package com.kakaoteck.golagola.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

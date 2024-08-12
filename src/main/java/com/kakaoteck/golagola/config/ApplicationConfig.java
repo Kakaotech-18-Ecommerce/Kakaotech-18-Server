@@ -1,4 +1,4 @@
-package com.kakaoteck.golagola.config.util;
+package com.kakaoteck.golagola.config;
 
 import com.kakaoteck.golagola.domain.buyer.entity.Buyer;
 import com.kakaoteck.golagola.domain.buyer.repository.BuyerRepository;
