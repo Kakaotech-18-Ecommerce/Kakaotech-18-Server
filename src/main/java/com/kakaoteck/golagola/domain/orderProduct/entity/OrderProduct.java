@@ -1,6 +1,7 @@
 package com.kakaoteck.golagola.domain.orderProduct.entity;
 
 import com.kakaoteck.golagola.domain.product.entity.Product;
+import com.kakaoteck.golagola.domain.review.entity.Review;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +23,9 @@ public class OrderProduct {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
+
+    @OneToOne(mappedBy = "orderProduct", cascade = CascadeType.ALL)
+    private Review review;
 
     private Long quantity;
     private Long orderPrice;
