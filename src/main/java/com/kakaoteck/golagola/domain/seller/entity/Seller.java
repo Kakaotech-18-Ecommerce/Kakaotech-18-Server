@@ -34,6 +34,9 @@ public class Seller extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private String nickname;
 
+    @Column(nullable = false)
+    private String password;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Gender gender;
@@ -47,10 +50,10 @@ public class Seller extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private String phoneNum;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private String realName;
 

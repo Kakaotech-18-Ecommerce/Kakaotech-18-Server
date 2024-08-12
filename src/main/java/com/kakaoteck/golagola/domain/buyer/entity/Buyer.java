@@ -45,6 +45,9 @@ public class Buyer extends BaseEntity implements UserDetails {
     private String email;
 
     @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
     private String address;
 
     @Column(nullable = false)
