@@ -1,4 +1,7 @@
 package com.kakaoteck.golagola.domain.auth.dto;
 
-public record AuthRequest() {
+public record AuthRequest(
+        String email,
+        String password
+) {
 }

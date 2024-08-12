@@ -1,4 +1,10 @@
 package com.kakaoteck.golagola.domain.auth.dto;
 
-public class AuthResponse {
+import lombok.Builder;
+
+@Builder
+public record AuthResponse(
+        String accessToken,
+        String refreshToken
+) {
 }
