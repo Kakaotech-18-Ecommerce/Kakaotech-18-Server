@@ -13,10 +13,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -71,37 +73,37 @@ public class Buyer extends BaseEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Collections.singleton(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
     public String getPassword() {
-        return null;
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return this.email;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return true;
     }
 
     public void updateProfile(BuyerRequest.MyPagePutDto request) {
@@ -110,7 +112,7 @@ public class Buyer extends BaseEntity implements UserDetails {
         this.phoneNum = request.phoneNum();
     }
 
-    public static Buyer from(Long buyerId, String nickname, String realName, Gender gender, String email,
+    public static Buyer from(Long buyerId, String nickname, String realName, Gender gender, String email, String password,
                              String address, String phoneNum, Role role, LocalDate registerDate) {
         return Buyer.builder()
                 .buyerId(buyerId)
@@ -118,11 +120,12 @@ public class Buyer extends BaseEntity implements UserDetails {
                 .realName(realName)
                 .gender(gender)
                 .email(email)
+                .password(password)
                 .address(address)
                 .phoneNum(phoneNum)
                 .role(role)
                 .registerDate(registerDate)
                 .build();
     }
-
 }
+

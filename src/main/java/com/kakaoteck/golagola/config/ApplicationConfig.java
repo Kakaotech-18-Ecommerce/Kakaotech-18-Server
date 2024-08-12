@@ -32,10 +32,10 @@ public class ApplicationConfig {
     public UserDetailsService userDetailsService() {
         return username -> {
             // Try to find the user as a Buyer
-            Buyer buyer = buyerRepository.findByEmail(username)
-                    .orElse(null);
+            Buyer buyer = buyerRepository.findByEmail(username).orElse(null);
 
             if (buyer != null) {
+                System.out.println("Buyer found: " + username);
                 return new org.springframework.security.core.userdetails.User(
                         buyer.getEmail(),
                         buyer.getPassword(),
@@ -44,10 +44,11 @@ public class ApplicationConfig {
             }
 
             // Try to find the user as a Seller
-            Seller seller = sellerRepository.findByEmail(username)
-                    .orElse(null);
+            Seller seller = sellerRepository.findByEmail(username).orElse(null);
 
             if (seller != null) {
+                System.out.println("Seller found: " + username);
+                System.out.println("Encoded password: " + seller.getPassword());
                 return new org.springframework.security.core.userdetails.User(
                         seller.getEmail(),
                         seller.getPassword(),
@@ -58,6 +59,7 @@ public class ApplicationConfig {
             throw new UsernameNotFoundException("User not found with username: " + username);
         };
     }
+
 
     @Bean
     public AuthenticationProvider authenticationProvider() {

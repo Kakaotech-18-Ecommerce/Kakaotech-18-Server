@@ -10,6 +10,7 @@ import com.kakaoteck.golagola.domain.seller.entity.Seller;
 import com.kakaoteck.golagola.domain.seller.repository.SellerRepository;
 import com.kakaoteck.golagola.global.common.code.status.ErrorStatus;
 import com.kakaoteck.golagola.global.common.enums.Gender;
+import com.kakaoteck.golagola.global.common.enums.Role;
 import com.kakaoteck.golagola.global.common.exception.GeneralException;
 import com.kakaoteck.golagola.security.service.JwtService;
 import com.kakaoteck.golagola.security.token.Token;
@@ -50,8 +51,12 @@ public class AuthService {
                     .email(request.email())
                     .password(passwordEncoder.encode(request.password()))
                     .nickname(request.nickname())
+                    .realName(request.realName())
+                    .phoneNum(request.phoneNum())
                     .gender(Gender.valueOf(request.gender()))
                     .registerDate(LocalDate.now())
+                    .role(Role.valueOf(request.role()))
+                    .address(request.address())
                     .build();
             buyerRepository.save(buyer);
         } else if ("SELLER".equals(request.role())) {
@@ -59,14 +64,20 @@ public class AuthService {
                     .email(request.email())
                     .password(passwordEncoder.encode(request.password()))
                     .nickname(request.nickname())
+                    .realName(request.realName())
+                    .phoneNum(request.phoneNum())
                     .gender(Gender.valueOf(request.gender()))
                     .registerDate(LocalDate.now())
+                    .address(request.address())
+                    .role(Role.valueOf(request.role()))
                     .build();
             sellerRepository.save(seller);
         }
     }
 
     public AuthResponse authenticate(AuthRequest request) {
+        System.out.println("Attempting authentication for: " + request.email());
+
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -75,7 +86,8 @@ public class AuthService {
                     )
             );
         } catch (AuthenticationException e) {
-            throw new GeneralException(ErrorStatus._INVALID_USER);
+            System.out.println("Authentication failed for email: " + request.email());
+            throw new GeneralException(ErrorStatus._LOGIN_USER_INVALID);
         }
 
         Buyer buyer = buyerRepository.findByEmail(request.email()).orElse(null);
@@ -84,6 +96,8 @@ public class AuthService {
         if (buyer == null && seller == null) {
             throw new GeneralException(ErrorStatus._INVALID_USER);
         }
+
+        System.out.println("Authentication successful for: " + request.email());
 
         // Determine the UserDetails type and generate tokens
         UserDetails user = buyer != null ? buyer : seller;

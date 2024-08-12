@@ -8,8 +8,10 @@ public record JoinUserRequest(
         String email,
         String password,
         String nickname,
+        String realName,
+        String phoneNum,
+        String address,
         String gender,
-        LocalDate birthDate,
         String role
 ) {
 }
