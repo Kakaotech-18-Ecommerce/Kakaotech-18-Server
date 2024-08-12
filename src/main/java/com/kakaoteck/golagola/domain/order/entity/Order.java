@@ -1,5 +1,6 @@
 package com.kakaoteck.golagola.domain.order.entity;
 
+import com.kakaoteck.golagola.domain.buyer.entity.Buyer;
 import com.kakaoteck.golagola.domain.seller.entity.Seller;
 import com.kakaoteck.golagola.global.common.BaseEntity;
 import com.kakaoteck.golagola.global.common.enums.OrderStatus;
@@ -26,6 +27,10 @@ public class Order extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
     private Seller seller;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "buyer_id")
+    private Buyer buyer;
 
     private boolean isPay;
     private LocalDate paymentDate;
