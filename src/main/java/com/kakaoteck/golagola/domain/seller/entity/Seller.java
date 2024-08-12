@@ -1,6 +1,8 @@
 package com.kakaoteck.golagola.domain.seller.entity;
 
 import com.fasterxml.jackson.databind.ser.Serializers;
+import com.kakaoteck.golagola.domain.order.entity.Order;
+import com.kakaoteck.golagola.domain.product.entity.Product;
 import com.kakaoteck.golagola.global.common.BaseEntity;
 import com.kakaoteck.golagola.global.common.enums.Gender;
 import com.kakaoteck.golagola.global.common.enums.Role;
@@ -13,7 +15,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -35,6 +39,12 @@ public class Seller extends BaseEntity implements UserDetails {
     private Role role;
     private String realName;
     private LocalDate registerDate;
+
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
+    private List<Product> productList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
+    private List<Order> orderList = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

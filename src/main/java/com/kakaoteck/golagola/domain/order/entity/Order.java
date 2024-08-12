@@ -1,5 +1,6 @@
 package com.kakaoteck.golagola.domain.order.entity;
 
+import com.kakaoteck.golagola.domain.seller.entity.Seller;
 import com.kakaoteck.golagola.global.common.BaseEntity;
 import com.kakaoteck.golagola.global.common.enums.OrderStatus;
 import jakarta.persistence.*;
@@ -21,6 +22,10 @@ public class Order extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id")
+    private Seller seller;
 
     private boolean isPay;
     private LocalDate paymentDate;

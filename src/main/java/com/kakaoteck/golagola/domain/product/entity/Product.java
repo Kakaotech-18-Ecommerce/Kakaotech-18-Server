@@ -1,6 +1,7 @@
 package com.kakaoteck.golagola.domain.product.entity;
 
 import com.kakaoteck.golagola.domain.review.entity.Review;
+import com.kakaoteck.golagola.domain.seller.entity.Seller;
 import com.kakaoteck.golagola.global.common.BaseEntity;
 import com.kakaoteck.golagola.global.common.enums.Category;
 import com.kakaoteck.golagola.global.common.enums.DetailCategory;
@@ -24,6 +25,10 @@ public class Product extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id")
+    private Seller seller;
 
     private String productName;
     private String productExplanation;
