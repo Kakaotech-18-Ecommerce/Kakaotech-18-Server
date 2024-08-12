@@ -28,7 +28,7 @@ public class Buyer extends BaseEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long BuyerId;
+    private Long buyerId;
 
     @Column(nullable = false)
     private String nickname;
@@ -98,5 +98,19 @@ public class Buyer extends BaseEntity implements UserDetails {
         return UserDetails.super.isEnabled();
     }
 
+    public static Buyer from(Long buyerId, String nickname, String realName, Gender gender, String email,
+                             String address, String phoneNum, Role role, LocalDate registerDate) {
+        return Buyer.builder()
+                .buyerId(buyerId)
+                .nickname(nickname)
+                .realName(realName)
+                .gender(gender)
+                .email(email)
+                .address(address)
+                .phoneNum(phoneNum)
+                .role(role)
+                .registerDate(registerDate)
+                .build();
+    }
 
 }
