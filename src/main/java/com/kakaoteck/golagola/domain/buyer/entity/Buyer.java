@@ -1,5 +1,6 @@
 package com.kakaoteck.golagola.domain.buyer.entity;
 
+import com.kakaoteck.golagola.domain.buyer.dto.BuyerRequest;
 import com.kakaoteck.golagola.domain.cart.entity.Cart;
 import com.kakaoteck.golagola.domain.order.entity.Order;
 import com.kakaoteck.golagola.domain.review.entity.Review;
@@ -98,6 +99,12 @@ public class Buyer extends BaseEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
+    }
+
+    public void updateProfile(BuyerRequest.MyPagePutDto request) {
+        this.nickname = request.nickname();
+        this.address = request.address();
+        this.phoneNum = request.phoneNum();
     }
 
     public static Buyer from(Long buyerId, String nickname, String realName, Gender gender, String email,
