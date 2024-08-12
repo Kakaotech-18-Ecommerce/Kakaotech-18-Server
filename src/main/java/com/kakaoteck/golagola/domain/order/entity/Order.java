@@ -2,10 +2,7 @@ package com.kakaoteck.golagola.domain.order.entity;
 
 import com.kakaoteck.golagola.global.common.BaseEntity;
 import com.kakaoteck.golagola.global.common.enums.OrderStatus;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,6 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Builder
+@Table(name = "order_table") // order가 mySQL 예약어임 이슈 !
 public class Order extends BaseEntity {
 
     @Id

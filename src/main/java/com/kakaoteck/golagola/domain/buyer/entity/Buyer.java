@@ -3,10 +3,7 @@ package com.kakaoteck.golagola.domain.buyer.entity;
 import com.kakaoteck.golagola.global.common.enums.Gender;
 import com.kakaoteck.golagola.global.common.enums.Role;
 import com.kakaoteck.golagola.global.common.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +19,7 @@ import java.util.Collection;
 @AllArgsConstructor
 @Builder
 @Getter
+@Table(name = "buyer_table")
 public class Buyer extends BaseEntity implements UserDetails {
 
     @Id

@@ -4,10 +4,7 @@ import com.kakaoteck.golagola.domain.review.entity.Review;
 import com.kakaoteck.golagola.global.common.BaseEntity;
 import com.kakaoteck.golagola.global.common.enums.Category;
 import com.kakaoteck.golagola.global.common.enums.DetailCategory;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Builder
+@Table(name = "product_table")
 public class Product extends BaseEntity {
 
     @Id
