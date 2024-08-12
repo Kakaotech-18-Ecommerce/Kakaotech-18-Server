@@ -10,6 +10,6 @@ public record JoinUserRequest(
         String nickname,
         String gender,
         LocalDate birthDate,
-        Role role
+        String role
 ) {
 }
