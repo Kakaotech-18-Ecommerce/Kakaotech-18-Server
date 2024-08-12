@@ -1,12 +1,12 @@
 package com.kakaoteck.golagola.domain.buyer.entity;
 
+import com.kakaoteck.golagola.domain.cart.entity.Cart;
+import com.kakaoteck.golagola.domain.order.entity.Order;
+import com.kakaoteck.golagola.domain.review.entity.Review;
 import com.kakaoteck.golagola.global.common.enums.Gender;
 import com.kakaoteck.golagola.global.common.enums.Role;
 import com.kakaoteck.golagola.global.common.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,12 +16,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
+@Table(name = "buyer_table")
 public class Buyer extends BaseEntity implements UserDetails {
 
     @Id
@@ -36,6 +38,15 @@ public class Buyer extends BaseEntity implements UserDetails {
     private String phoneNum;
     private Role role;
     private LocalDate registerDate;
+
+    @OneToOne(mappedBy = "buyer", cascade = CascadeType.ALL)
+    private Cart cart;
+
+    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
+    private List<Review> reviewList;
+
+    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
+    private List<Order> orderList;
 
 
     @Override

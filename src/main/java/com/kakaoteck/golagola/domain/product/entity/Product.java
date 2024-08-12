@@ -1,13 +1,13 @@
 package com.kakaoteck.golagola.domain.product.entity;
 
+import com.kakaoteck.golagola.domain.cart.entity.Cart;
+import com.kakaoteck.golagola.domain.orderProduct.entity.OrderProduct;
 import com.kakaoteck.golagola.domain.review.entity.Review;
+import com.kakaoteck.golagola.domain.seller.entity.Seller;
 import com.kakaoteck.golagola.global.common.BaseEntity;
 import com.kakaoteck.golagola.global.common.enums.Category;
 import com.kakaoteck.golagola.global.common.enums.DetailCategory;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,11 +21,26 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Builder
+@Table(name = "product_table")
 public class Product extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id")
+    private Seller seller;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<Review> reviewList;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<OrderProduct> orderProductList;
 
     private String productName;
     private String productExplanation;
