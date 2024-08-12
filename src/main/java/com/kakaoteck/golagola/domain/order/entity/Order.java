@@ -1,6 +1,7 @@
 package com.kakaoteck.golagola.domain.order.entity;
 
 import com.kakaoteck.golagola.domain.buyer.entity.Buyer;
+import com.kakaoteck.golagola.domain.orderProduct.entity.OrderProduct;
 import com.kakaoteck.golagola.domain.seller.entity.Seller;
 import com.kakaoteck.golagola.global.common.BaseEntity;
 import com.kakaoteck.golagola.global.common.enums.OrderStatus;
@@ -11,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -31,6 +33,9 @@ public class Order extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buyer_id")
     private Buyer buyer;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderProduct> orderProductList;
 
     private boolean isPay;
     private LocalDate paymentDate;
