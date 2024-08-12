@@ -39,7 +39,16 @@ public class JwtService {
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return buildToken(extraClaims, userDetails, jwtExpiration);
+        String token = null;
+        try {
+            token = buildToken(extraClaims, userDetails, jwtExpiration);
+            System.out.println("Generated JWT Token: " + token);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 로그 추가
+            System.out.println("JWT Token 생성 중 오류 발생: " + e.getMessage());
+        }
+        return token;
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
