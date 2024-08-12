@@ -36,11 +36,34 @@ public class Review extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewId;
 
+    @Column(nullable = false)
     private String reviewTitle;
+
+    @Column(nullable = false)
     private Long reviewStar;
+
+    @Column(nullable = false)
     private String reviewContent;
+
+    @Column(nullable = false)
     private LocalDate reviewCreateTime;
+
+    @Column(nullable = false)
     private LocalDate reviewUpdateTime;
 
-
+    public static Review from(Long reviewId, Buyer buyer, Product product, OrderProduct orderProduct,
+                              String reviewTitle, Long reviewStar, String reviewContent,
+                              LocalDate reviewCreateTime, LocalDate reviewUpdateTime) {
+        return Review.builder()
+                .reviewId(reviewId)
+                .buyer(buyer)
+                .product(product)
+                .orderProduct(orderProduct)
+                .reviewTitle(reviewTitle)
+                .reviewStar(reviewStar)
+                .reviewContent(reviewContent)
+                .reviewCreateTime(reviewCreateTime)
+                .reviewUpdateTime(reviewUpdateTime)
+                .build();
+    }
 }
