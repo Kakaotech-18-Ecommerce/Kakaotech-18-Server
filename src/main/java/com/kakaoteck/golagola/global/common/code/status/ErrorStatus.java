@@ -22,6 +22,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // Product 에러
     _NOT_FOUND_PRODUCT(HttpStatus.NOT_FOUND, "USER400", "제품이 존재하지 않습니다."),
+    _NOT_FOUND_PRODUCT_IN_CART(HttpStatus.NOT_FOUND, "USER400", "제품이 장바구니에 존재하지 않습니다."),
 
     // Security 에러
     INVALID_TOKEN(HttpStatus.BAD_REQUEST, "SEC4001", "잘못된 형식의 토큰입니다."),

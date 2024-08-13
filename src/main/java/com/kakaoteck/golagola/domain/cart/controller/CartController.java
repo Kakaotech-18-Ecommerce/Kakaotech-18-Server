@@ -33,4 +33,15 @@ public class CartController {
     ) {
         return ApiResponse.onSuccess(cartService.addCartProduct(buyer, request.productId()));
     }
+
+    @Operation(summary = "상품 장바구니 삭제", description = "장바구니에 있는 상품 목록을 수정합니다.")
+    @DeleteMapping()
+    public ApiResponse<CartResponse> deleteCartProduct(
+            @AuthenticationPrincipal Buyer buyer,
+            @RequestBody CartRequest request
+    ) {
+        return ApiResponse.onSuccess(cartService.deleteCartProduct(buyer, request.productId()));
+    }
+
+
 }

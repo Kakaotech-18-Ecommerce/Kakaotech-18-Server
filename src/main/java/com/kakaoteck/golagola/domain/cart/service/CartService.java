@@ -48,4 +48,24 @@ public class CartService {
                 .productList(buyer.getCart().getProductList())
                 .build();
     }
+
+    public CartResponse deleteCartProduct(Buyer buyer, Long productId) {
+        if (buyer.getCart() == null || buyer.getCart().getProductList() == null) {
+            throw new GeneralException(ErrorStatus._NOT_FOUND_PRODUCT_IN_CART);
+        }
+
+        // Buyer의 cart에서 해당 productId에 해당하는 제품을 찾음
+        List<Product> productList = buyer.getCart().getProductList();
+        Product productToRemove = productList.stream()
+                .filter(product -> product.getProductId().equals(productId))
+                .findFirst()
+                .orElseThrow(() -> new GeneralException(ErrorStatus._NOT_FOUND_PRODUCT_IN_CART));
+
+        // 제품을 장바구니에서 삭제
+        productList.remove(productToRemove);
+
+        return CartResponse.builder()
+                .productList(productList)
+                .build();
+    }
 }
