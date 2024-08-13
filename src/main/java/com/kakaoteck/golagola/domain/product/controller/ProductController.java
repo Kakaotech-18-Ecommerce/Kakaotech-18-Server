@@ -1,6 +1,7 @@
 package com.kakaoteck.golagola.domain.product.controller;
 
 import com.kakaoteck.golagola.domain.product.dto.ProductRequest;
+import com.kakaoteck.golagola.domain.product.dto.ProductResponse;
 import com.kakaoteck.golagola.domain.product.service.ProductService;
 import com.kakaoteck.golagola.domain.seller.dto.SellerResponse;
 import com.kakaoteck.golagola.domain.seller.entity.Seller;
@@ -25,5 +26,15 @@ public class ProductController {
             @RequestBody ProductRequest request
     ) {
         return ApiResponse.onSuccess(productService.postProduct(seller, request));
+    }
+
+    @Operation(summary = "상품 수정", description = "상품 정보를 수정합니다.")
+    @PutMapping()
+    public ApiResponse<ProductResponse> modifyProduct(
+            @AuthenticationPrincipal Seller seller,
+            @PathVariable Long productId,
+            @RequestBody ProductRequest request
+    ) {
+        return ApiResponse.onSuccess(productService.modifyProduct(seller, productId, request));
     }
 }

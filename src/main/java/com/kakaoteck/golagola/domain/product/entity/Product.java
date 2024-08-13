@@ -83,6 +83,22 @@ public class Product extends BaseEntity {
     @Column()
     private Float productStar;
 
+
+    public void updateProduct(String productName, String productExplanation, String productImage, Long productPrice,
+                              Long productInventory, Category category, DetailCategory detailCategory,
+                              Long discount, Long productQuantity, LocalTime updateTime) {
+        this.productName = productName;
+        this.productExplanation = productExplanation;
+        this.productImage = productImage;
+        this.productPrice = productPrice;
+        this.productInventory = productInventory;
+        this.category = category;
+        this.detailCategory = detailCategory;
+        this.discount = discount;
+        this.productQuantity = productQuantity;
+        this.updateTime = updateTime;
+    }
+
     public static Product from(Long productId, Seller seller, Cart cart, List<Review> reviewList,
                                List<OrderProduct> orderProductList, String productName,
                                String productExplanation, String productImage, Long productPrice,

@@ -1,10 +1,13 @@
 package com.kakaoteck.golagola.domain.product.service;
 
 import com.kakaoteck.golagola.domain.product.dto.ProductRequest;
+import com.kakaoteck.golagola.domain.product.dto.ProductResponse;
 import com.kakaoteck.golagola.domain.product.entity.Product;
 import com.kakaoteck.golagola.domain.product.repository.ProductRepository;
 import com.kakaoteck.golagola.domain.seller.entity.Seller;
 import com.kakaoteck.golagola.domain.seller.repository.SellerRepository;
+import com.kakaoteck.golagola.global.common.code.status.ErrorStatus;
+import com.kakaoteck.golagola.global.common.exception.GeneralException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -44,5 +47,46 @@ public class ProductService {
         productRepository.save(product);
 
         return "상품등록 성공";
+    }
+
+    public ProductResponse modifyProduct(Seller seller, Long productId, ProductRequest request) {
+        // productId로 해당 상품을 찾음
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus._NOT_FOUND_PRODUCT));
+
+        // 해당 상품이 현재 로그인한 seller가 등록한 것인지 확인
+        if (!product.getSeller().getSellerId().equals(seller.getSellerId())) {
+            throw new GeneralException(ErrorStatus._UNAUTHORIZED_ACCESS);
+        }
+
+        // Product 정보 업데이트
+        product.updateProduct(
+                request.productName(),
+                request.productExplanation(),
+                request.productImage(),
+                request.productPrice(),
+                request.productInventory(),
+                request.category(),
+                request.detailCategory(),
+                request.discount(),
+                request.productQuantity(),
+                LocalTime.now()  // updateTime을 현재 시간으로 업데이트
+        );
+
+        // 업데이트된 Product 저장
+        productRepository.save(product);
+
+        return ProductResponse.builder()
+                .productId(product.getProductId())
+                .productName(product.getProductName())
+                .productExplanation(product.getProductExplanation())
+                .productImage(product.getProductImage())
+                .productPrice(product.getProductPrice())
+                .productInventory(product.getProductInventory())
+                .category(product.getCategory())
+                .detailCategory(product.getDetailCategory())
+                .discount(product.getDiscount())
+                .productQuantity(product.getProductQuantity())
+                .build();
     }
 }

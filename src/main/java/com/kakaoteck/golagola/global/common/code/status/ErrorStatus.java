@@ -19,6 +19,7 @@ public enum ErrorStatus implements BaseErrorCode {
     _NOT_FOUND_USER(HttpStatus.NOT_FOUND, "USER400", "사용자가 존재하지 않습니다."),
     _LOGIN_USER_INVALID(HttpStatus.BAD_REQUEST, "USER401", "로그인 중 오류가 발생하였습니다."),
     _INVALID_USER(HttpStatus.BAD_REQUEST, "USER401" , "아이디 또는 비밀번호가 틀렸습니다."),
+    _UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "USER401", "본인이 등록한 제품만 수정할 수 있습니다."),
 
     // Product 에러
     _NOT_FOUND_PRODUCT(HttpStatus.NOT_FOUND, "USER400", "제품이 존재하지 않습니다."),
