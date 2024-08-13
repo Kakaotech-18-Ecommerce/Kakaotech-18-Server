@@ -77,10 +77,10 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     private Long productQuantity;
 
-    @Column(nullable = false)
+    @Column()
     private Float predictReviewStar;
 
-    @Column(nullable = false)
+    @Column()
     private Float productStar;
 
     public static Product from(Long productId, Seller seller, Cart cart, List<Review> reviewList,
