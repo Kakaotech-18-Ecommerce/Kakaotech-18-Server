@@ -100,7 +100,15 @@ public class ProductService {
             throw new GeneralException(ErrorStatus._UNAUTHORIZED_ACCESS);
         }
 
+        // 해당 Product가 장바구니에 담겨 있는지 확인
+        boolean isInCart = product.getCartProducts() != null && !product.getCartProducts().isEmpty();
+
+        if (isInCart) {
+            throw new GeneralException(ErrorStatus._PRODUCT_IN_CART_CANNOT_DELETE);
+        }
+
         // Product 삭제
         productRepository.delete(product);
     }
+
 }
