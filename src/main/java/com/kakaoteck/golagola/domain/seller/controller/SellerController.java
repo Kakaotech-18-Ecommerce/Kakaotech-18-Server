@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 public class SellerController {
 
     private final SellerService sellerService;
-    private final SellerRepository sellerRepository;
 
     @Operation(summary = "판매자 마이페이지 조회", description = "판매자의 정보를 조회합니다.")
     @GetMapping("/mypage")

@@ -19,7 +19,7 @@ import java.util.List;
 public class Cart {
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "buyer_id", nullable = false)
+    @JoinColumn(name = "buyer_id")
     private Buyer buyer;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
@@ -28,5 +28,12 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartId;
+
+    public void assignBuyer(Buyer buyer) {
+        if (buyer != null) {
+            this.buyer = buyer;
+            buyer.assignCart(this);
+        }
+    }
 
 }
