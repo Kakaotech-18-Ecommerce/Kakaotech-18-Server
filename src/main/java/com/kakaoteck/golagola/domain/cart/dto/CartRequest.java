@@ -1,4 +1,11 @@
 package com.kakaoteck.golagola.domain.cart.dto;
 
-public record CartRequest() {
+import com.kakaoteck.golagola.domain.product.entity.Product;
+import lombok.Builder;
+
+@Builder
+public record CartRequest(
+        Long productId
+
+) {
 }

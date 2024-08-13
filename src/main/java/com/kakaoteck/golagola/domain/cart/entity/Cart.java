@@ -29,4 +29,11 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartId;
 
+    public void assignBuyer(Buyer buyer) {
+        if (buyer != null) {
+            this.buyer = buyer;
+            buyer.assignCart(this);
+        }
+    }
+
 }

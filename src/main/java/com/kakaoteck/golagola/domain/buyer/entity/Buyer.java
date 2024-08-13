@@ -3,6 +3,7 @@ package com.kakaoteck.golagola.domain.buyer.entity;
 import com.kakaoteck.golagola.domain.buyer.dto.BuyerRequest;
 import com.kakaoteck.golagola.domain.cart.entity.Cart;
 import com.kakaoteck.golagola.domain.order.entity.Order;
+import com.kakaoteck.golagola.domain.product.entity.Product;
 import com.kakaoteck.golagola.domain.review.entity.Review;
 import com.kakaoteck.golagola.global.common.enums.Gender;
 import com.kakaoteck.golagola.global.common.enums.Role;
@@ -110,6 +111,29 @@ public class Buyer extends BaseEntity implements UserDetails {
         this.nickname = request.nickname();
         this.address = request.address();
         this.phoneNum = request.phoneNum();
+    }
+
+    public void assignCart(Cart cart) {
+        if (cart != null) {
+            this.cart = cart;
+            cart.assignBuyer(this);
+        }
+    }
+
+    public void addProductToCart(Product product) {
+        if (this.cart == null) {
+            this.cart = new Cart(); // 새로운 Cart 객체 생성
+            this.cart.assignBuyer(this); // Cart와 Buyer 간의 양방향 연관관계 설정
+        }
+        this.cart.getProductList().add(product);
+    }
+
+    public Cart getOrCreateCart() {
+        if (this.cart == null) {
+            this.cart = new Cart(); // 새로운 Cart 객체 생성
+            this.cart.assignBuyer(this); // Cart와 Buyer 간의 양방향 연관관계 설정
+        }
+        return this.cart;
     }
 
     public static Buyer from(Long buyerId, String nickname, String realName, Gender gender, String email, String password,
