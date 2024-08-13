@@ -52,7 +52,7 @@ public class CartService {
                 .build();
     }
 
-    public CartResponse addCartProduct(Buyer buyer, Long productId) {
+    public CartResponse addCartProduct(Buyer buyer, Long productId, Long quantity) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus._NOT_FOUND_PRODUCT));
 
@@ -70,6 +70,7 @@ public class CartService {
         CartProduct cartProduct = CartProduct.builder()
                 .cart(cart)
                 .product(product)
+                .quantity(quantity)
                 .build();
 
         cartProductRepository.save(cartProduct);

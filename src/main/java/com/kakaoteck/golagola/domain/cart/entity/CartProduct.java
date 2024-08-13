@@ -27,6 +27,9 @@ public class CartProduct {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @Column
+    private Long quantity;
+
     public void assignCart(Cart cart) {
         this.cart = cart;
         if (!cart.getCartProducts().contains(this)) {

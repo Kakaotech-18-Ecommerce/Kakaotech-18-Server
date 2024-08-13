@@ -62,6 +62,13 @@ public class Order extends BaseEntity {
     @Column(nullable = false)
     private LocalDate orderDate;
 
+    public void assignBuyer(Buyer buyer) {
+        this.buyer = buyer;
+        if (!buyer.getOrderList().contains(this)) {
+            buyer.getOrderList().add(this);
+        }
+    }
+
     public static Order from(Long orderId, Seller seller, Buyer buyer, List<OrderProduct> orderProductList,
                              boolean isPay, LocalDate paymentDate, String orderAddress,
                              String orderNotes, LocalDate orderArrival, LocalDate orderExpectation,
