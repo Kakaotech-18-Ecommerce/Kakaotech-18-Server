@@ -1,5 +1,6 @@
 package com.kakaoteck.golagola.domain.seller.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import com.kakaoteck.golagola.domain.buyer.dto.BuyerRequest;
 import com.kakaoteck.golagola.domain.order.entity.Order;
@@ -65,6 +66,7 @@ public class Seller extends BaseEntity implements UserDetails {
     private LocalDate registerDate;
 
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Product> productList = new ArrayList<>();
 
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)

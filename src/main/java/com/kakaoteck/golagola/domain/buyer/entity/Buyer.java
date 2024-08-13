@@ -2,6 +2,7 @@ package com.kakaoteck.golagola.domain.buyer.entity;
 
 import com.kakaoteck.golagola.domain.buyer.dto.BuyerRequest;
 import com.kakaoteck.golagola.domain.cart.entity.Cart;
+import com.kakaoteck.golagola.domain.cart.entity.CartProduct;
 import com.kakaoteck.golagola.domain.order.entity.Order;
 import com.kakaoteck.golagola.domain.product.entity.Product;
 import com.kakaoteck.golagola.domain.review.entity.Review;
@@ -25,8 +26,8 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Getter
+@Builder
 @Table(name = "buyer_table")
 public class Buyer extends BaseEntity implements UserDetails {
 
@@ -63,7 +64,7 @@ public class Buyer extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private LocalDate registerDate;
 
-    @OneToOne(mappedBy = "buyer", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "buyer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Cart cart;
 
     @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
@@ -114,26 +115,34 @@ public class Buyer extends BaseEntity implements UserDetails {
     }
 
     public void assignCart(Cart cart) {
-        if (cart != null) {
-            this.cart = cart;
+        this.cart = cart;
+        if (cart.getBuyer() != this) {
             cart.assignBuyer(this);
         }
     }
 
-    public void addProductToCart(Product product) {
+    // Cart를 자동으로 초기화
+    @PrePersist
+    public void initializeCart() {
         if (this.cart == null) {
-            this.cart = new Cart(); // 새로운 Cart 객체 생성
-            this.cart.assignBuyer(this); // Cart와 Buyer 간의 양방향 연관관계 설정
+            Cart newCart = new Cart();
+            newCart.assignBuyer(this);
+            this.cart = newCart;
         }
-        this.cart.getProductList().add(product);
     }
 
     public Cart getOrCreateCart() {
         if (this.cart == null) {
-            this.cart = new Cart(); // 새로운 Cart 객체 생성
-            this.cart.assignBuyer(this); // Cart와 Buyer 간의 양방향 연관관계 설정
+            Cart newCart = new Cart();
+            newCart.assignBuyer(this);
+            this.cart = newCart;
         }
         return this.cart;
+    }
+
+    public void addProductToCart(Product product) {
+        Cart cart = this.getOrCreateCart();
+        cart.addProduct(product);
     }
 
     public static Buyer from(Long buyerId, String nickname, String realName, Gender gender, String email, String password,
@@ -152,4 +161,3 @@ public class Buyer extends BaseEntity implements UserDetails {
                 .build();
     }
 }
-

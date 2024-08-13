@@ -1,6 +1,7 @@
 package com.kakaoteck.golagola.domain.product.entity;
 
-import com.kakaoteck.golagola.domain.cart.entity.Cart;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.kakaoteck.golagola.domain.cart.entity.CartProduct;
 import com.kakaoteck.golagola.domain.orderProduct.entity.OrderProduct;
 import com.kakaoteck.golagola.domain.review.entity.Review;
 import com.kakaoteck.golagola.domain.seller.entity.Seller;
@@ -30,11 +31,11 @@ public class Product extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
+    @JsonBackReference
     private Seller seller;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartProduct> cartProducts;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Review> reviewList;
@@ -77,24 +78,35 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     private Long productQuantity;
 
-    @Column(nullable = false)
+    @Column()
     private Float predictReviewStar;
 
-    @Column(nullable = false)
+    @Column()
     private Float productStar;
 
-    public static Product from(Long productId, Seller seller, Cart cart, List<Review> reviewList,
-                               List<OrderProduct> orderProductList, String productName,
-                               String productExplanation, String productImage, Long productPrice,
-                               Long productInventory, Category category, DetailCategory detailCategory,
-                               Long discount, LocalTime createTime, LocalTime updateTime,
-                               Long productQuantity, Float predictReviewStar, Float productStar) {
+    // Product 수정 메서드
+    public void updateProduct(String productName, String productExplanation, String productImage, Long productPrice,
+                              Long productInventory, Category category, DetailCategory detailCategory,
+                              Long discount, Long productQuantity, LocalTime updateTime) {
+        this.productName = productName;
+        this.productExplanation = productExplanation;
+        this.productImage = productImage;
+        this.productPrice = productPrice;
+        this.productInventory = productInventory;
+        this.category = category;
+        this.detailCategory = detailCategory;
+        this.discount = discount;
+        this.productQuantity = productQuantity;
+        this.updateTime = updateTime;
+    }
+
+    // Product 생성 메서드
+    public static Product createProduct(Seller seller, String productName, String productExplanation,
+                                        String productImage, Long productPrice, Long productInventory,
+                                        Category category, DetailCategory detailCategory, Long discount,
+                                        Long productQuantity) {
         return Product.builder()
-                .productId(productId)
                 .seller(seller)
-                .cart(cart)
-                .reviewList(reviewList)
-                .orderProductList(orderProductList)
                 .productName(productName)
                 .productExplanation(productExplanation)
                 .productImage(productImage)
@@ -103,12 +115,11 @@ public class Product extends BaseEntity {
                 .category(category)
                 .detailCategory(detailCategory)
                 .discount(discount)
-                .createTime(createTime)
-                .updateTime(updateTime)
                 .productQuantity(productQuantity)
-                .predictReviewStar(predictReviewStar)
-                .productStar(productStar)
+                .createTime(LocalTime.now())
+                .updateTime(LocalTime.now())
+                .predictReviewStar(0.0f)  // 초기 예상 리뷰 별점
+                .productStar(0.0f)        // 초기 실제 리뷰 별점
                 .build();
     }
-
 }
