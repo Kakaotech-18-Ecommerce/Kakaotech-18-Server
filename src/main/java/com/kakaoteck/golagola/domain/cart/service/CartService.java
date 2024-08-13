@@ -68,4 +68,15 @@ public class CartService {
                 .productList(productList)
                 .build();
     }
+
+    public String emptyCart(Buyer buyer) {
+        if (buyer.getCart() == null || buyer.getCart().getProductList() == null) {
+            throw new GeneralException(ErrorStatus._CART_IS_ALREADY_EMPTY);
+        }
+
+        // 장바구니를 비움
+        buyer.getCart().getProductList().clear();
+
+        return "장바구니에 있는 모든 제품이 삭제되었습니다.";
+    }
 }
