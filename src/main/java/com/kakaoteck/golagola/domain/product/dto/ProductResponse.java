@@ -19,4 +19,11 @@ public record ProductResponse(
         Float predictReviewStar,
         Float productStar
 ) {
+    @Builder
+    public record ProductDto (Long productId,
+                              String productName,
+                              String productExplanation,
+                              Long productPrice) {
+
+    }
 }

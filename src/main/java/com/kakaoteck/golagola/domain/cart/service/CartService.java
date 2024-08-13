@@ -1,21 +1,23 @@
 package com.kakaoteck.golagola.domain.cart.service;
 
-import com.kakaoteck.golagola.domain.buyer.dto.BuyerResponse;
 import com.kakaoteck.golagola.domain.buyer.entity.Buyer;
-import com.kakaoteck.golagola.domain.cart.dto.CartRequest;
 import com.kakaoteck.golagola.domain.cart.dto.CartResponse;
+import com.kakaoteck.golagola.domain.cart.entity.Cart;
+import com.kakaoteck.golagola.domain.cart.entity.CartProduct;
+import com.kakaoteck.golagola.domain.cart.repository.CartProductRepository;
+import com.kakaoteck.golagola.domain.product.dto.ProductResponse;
 import com.kakaoteck.golagola.domain.product.entity.Product;
 import com.kakaoteck.golagola.domain.product.repository.ProductRepository;
 import com.kakaoteck.golagola.global.common.code.status.ErrorStatus;
 import com.kakaoteck.golagola.global.common.exception.GeneralException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,16 +26,29 @@ import java.util.Optional;
 public class CartService {
 
     private final ProductRepository productRepository;
+    private final CartProductRepository cartProductRepository;
 
     public CartResponse getCartProducts(Buyer buyer) {
-        // Cart가 null이 아닌 경우에만 productList를 가져오고, 그렇지 않으면 빈 리스트를 반환
-        List<Product> productList = Collections.emptyList();
-        if (buyer.getCart() != null) {
-            productList = buyer.getCart().getProductList() != null ? buyer.getCart().getProductList() : Collections.emptyList();
-        }
+        Cart cart = buyer.getCart();
+
+        // Lazy 로딩을 명시적으로 초기화
+        Hibernate.initialize(cart.getCartProducts());
+
+        // CartProduct 객체에서 Product를 추출하여 리스트 생성
+        List<ProductResponse.ProductDto> products = cart.getCartProducts().stream()
+                .map(cartProduct -> {
+                    Product product = cartProduct.getProduct();
+                    return ProductResponse.ProductDto.builder()
+                            .productId(product.getProductId())
+                            .productName(product.getProductName())
+                            .productExplanation(product.getProductExplanation())
+                            .productPrice(product.getProductPrice())
+                            .build();
+                })
+                .collect(Collectors.toList());
 
         return CartResponse.builder()
-                .productList(productList)
+                .productList(products)
                 .build();
     }
 
@@ -41,41 +56,48 @@ public class CartService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus._NOT_FOUND_PRODUCT));
 
-        // Buyer의 cart에 product를 추가
-        buyer.addProductToCart(product);
+        Cart cart = buyer.getOrCreateCart();
 
-        return CartResponse.builder()
-                .productList(buyer.getCart().getProductList())
+        // 장바구니에 이미 동일한 상품이 있는지 확인
+        boolean productExistsInCart = cart.getCartProducts().stream()
+                .anyMatch(cp -> cp.getProduct().getProductId().equals(productId));
+
+        if (productExistsInCart) {
+            throw new GeneralException(ErrorStatus._PRODUCT_ALREADY_IN_CART);  // 이미 존재한다면 예외를 던집니다.
+        }
+
+        // 장바구니에 상품 추가
+        CartProduct cartProduct = CartProduct.builder()
+                .cart(cart)
+                .product(product)
                 .build();
+
+        cartProductRepository.save(cartProduct);
+
+        return getCartProducts(buyer);
     }
 
     public CartResponse deleteCartProduct(Buyer buyer, Long productId) {
-        if (buyer.getCart() == null || buyer.getCart().getProductList() == null) {
-            throw new GeneralException(ErrorStatus._NOT_FOUND_PRODUCT_IN_CART);
-        }
+        Cart cart = buyer.getCart();
 
-        // Buyer의 cart에서 해당 productId에 해당하는 제품을 찾음
-        List<Product> productList = buyer.getCart().getProductList();
-        Product productToRemove = productList.stream()
-                .filter(product -> product.getProductId().equals(productId))
+        CartProduct cartProduct = cart.getCartProducts().stream()
+                .filter(cp -> cp.getProduct().getProductId().equals(productId))
                 .findFirst()
                 .orElseThrow(() -> new GeneralException(ErrorStatus._NOT_FOUND_PRODUCT_IN_CART));
 
-        // 제품을 장바구니에서 삭제
-        productList.remove(productToRemove);
+        cartProductRepository.delete(cartProduct);
 
-        return CartResponse.builder()
-                .productList(productList)
-                .build();
+        return getCartProducts(buyer);
     }
 
     public String emptyCart(Buyer buyer) {
-        if (buyer.getCart() == null || buyer.getCart().getProductList() == null) {
+        Cart cart = buyer.getCart();
+
+        if (cart.getCartProducts().isEmpty()) {
             throw new GeneralException(ErrorStatus._CART_IS_ALREADY_EMPTY);
         }
 
-        // 장바구니를 비움
-        buyer.getCart().getProductList().clear();
+        cartProductRepository.deleteAll(cart.getCartProducts());
 
         return "장바구니에 있는 모든 제품이 삭제되었습니다.";
     }

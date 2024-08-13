@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,18 +23,24 @@ public class Cart {
     @JoinColumn(name = "buyer_id")
     private Buyer buyer;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
-    private List<Product> productList;
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<CartProduct> cartProducts = new ArrayList<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartId;
 
     public void assignBuyer(Buyer buyer) {
-        if (buyer != null) {
-            this.buyer = buyer;
+        this.buyer = buyer;
+        if (buyer.getCart() != this) {
             buyer.assignCart(this);
         }
     }
 
+    public void addProduct(Product product) {
+        CartProduct cartProduct = new CartProduct();
+        cartProduct.assignCart(this);
+        cartProduct.assignProduct(product);
+        this.cartProducts.add(cartProduct);
+    }
 }

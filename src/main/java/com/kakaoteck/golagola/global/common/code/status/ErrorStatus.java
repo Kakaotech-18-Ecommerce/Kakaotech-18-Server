@@ -27,6 +27,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // Cart 에러
     _CART_IS_ALREADY_EMPTY(HttpStatus.BAD_REQUEST, "USER400", "장바구니가 이미 비어있습니다."),
+    _PRODUCT_ALREADY_IN_CART(HttpStatus.BAD_REQUEST, "USER400", "장바구니에 이미 해당상품이 존재합니다."),
 
     // Security 에러
     INVALID_TOKEN(HttpStatus.BAD_REQUEST, "SEC4001", "잘못된 형식의 토큰입니다."),
