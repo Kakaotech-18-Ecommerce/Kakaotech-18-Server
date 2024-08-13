@@ -29,7 +29,7 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 수정", description = "상품 정보를 수정합니다.")
-    @PutMapping()
+    @PutMapping("/{productId}")
     public ApiResponse<ProductResponse> modifyProduct(
             @AuthenticationPrincipal Seller seller,
             @PathVariable Long productId,
@@ -37,4 +37,15 @@ public class ProductController {
     ) {
         return ApiResponse.onSuccess(productService.modifyProduct(seller, productId, request));
     }
+
+    @Operation(summary = "상품 삭제", description = "상품을 삭제합니다. 판매자 전용")
+    @DeleteMapping("/{productId}")
+    public ApiResponse<String> deleteProduct(
+            @AuthenticationPrincipal Seller seller,
+            @PathVariable Long productId
+    ) {
+        productService.deleteProduct(seller, productId);
+        return ApiResponse.onSuccess("상품이 성공적으로 삭제되었습니다.");
+    }
+
 }

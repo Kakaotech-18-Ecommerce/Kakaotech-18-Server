@@ -89,4 +89,18 @@ public class ProductService {
                 .productQuantity(product.getProductQuantity())
                 .build();
     }
+
+    public void deleteProduct(Seller seller, Long productId) {
+        // productId로 Product를 찾음
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus._NOT_FOUND_PRODUCT));
+
+        // 해당 Product가 현재 로그인된 seller가 등록한 제품인지 확인
+        if (!product.getSeller().getSellerId().equals(seller.getSellerId())) {
+            throw new GeneralException(ErrorStatus._UNAUTHORIZED_ACCESS);
+        }
+
+        // Product 삭제
+        productRepository.delete(product);
+    }
 }
