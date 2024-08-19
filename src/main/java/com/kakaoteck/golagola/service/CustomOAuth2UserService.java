@@ -1,8 +1,8 @@
 package com.kakaoteck.golagola.service;
 
-import com.kakaoteck.golagola.Repository.UserRepository;
-import com.kakaoteck.golagola.dto.*;
-import com.kakaoteck.golagola.entity.UserEntity;
+import com.kakaoteck.golagola.domain.auth.Repository.UserRepository;
+import com.kakaoteck.golagola.domain.auth.dto.*;
+import com.kakaoteck.golagola.domain.auth.entity.UserEntity;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;

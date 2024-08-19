@@ -1,6 +1,6 @@
-package com.kakaoteck.golagola.Repository;
+package com.kakaoteck.golagola.domain.auth.Repository;
 
-import com.kakaoteck.golagola.entity.UserEntity;
+import com.kakaoteck.golagola.domain.auth.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<UserEntity, Long> {

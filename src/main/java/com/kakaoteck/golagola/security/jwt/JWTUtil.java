@@ -1,4 +1,4 @@
-package com.kakaoteck.golagola.jwt;
+package com.kakaoteck.golagola.security.jwt;
 
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,6 +1,5 @@
-package com.kakaoteck.golagola.dto;
+package com.kakaoteck.golagola.domain.auth.dto;
 
-import java.io.Serializable;
 import java.util.Map;
 
 public class NaverResponse implements OAuth2Response{
