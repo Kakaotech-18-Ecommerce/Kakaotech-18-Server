@@ -1,4 +1,4 @@
-package com.kakaoteck.golagola.dto;
+package com.kakaoteck.golagola.domain.auth.dto;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;

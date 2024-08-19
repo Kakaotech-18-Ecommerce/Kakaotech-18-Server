@@ -1,4 +1,4 @@
-package com.kakaoteck.golagola.entity;
+package com.kakaoteck.golagola.domain.auth.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

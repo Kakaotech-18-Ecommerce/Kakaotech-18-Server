@@ -1,7 +1,7 @@
-package com.kakaoteck.golagola.oauth2;
+package com.kakaoteck.golagola.security.oauth2;
 
-import com.kakaoteck.golagola.dto.CustomOAuth2User;
-import com.kakaoteck.golagola.jwt.JWTUtil;
+import com.kakaoteck.golagola.domain.auth.dto.CustomOAuth2User;
+import com.kakaoteck.golagola.security.jwt.JWTUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,7 +39,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String token = jwtUtil.createJwt(username, role, 60*60*60L);
 
         response.addCookie(createCookie("Authorization", token)); // 쿠키를 넣어준다.
-        response.sendRedirect("http://localhost:3000/"); // 프론트쪽으로 특정 uri로 리다이렉트
+        response.sendRedirect("http://localhost:8080/"); // 프론트쪽으로 특정 uri로 리다이렉트
     }
 
     private Cookie createCookie(String key, String value) {

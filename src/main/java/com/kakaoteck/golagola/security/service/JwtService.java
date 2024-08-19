@@ -20,8 +20,10 @@ public class JwtService {
 
     @Value("${spring.jwt.secret}")
     private String secretKey;
+
     @Value("${spring.jwt.token.access-expiration-time}")
     private long jwtExpiration;
+
     @Value("${spring.jwt.token.refresh-expiration-time}")
     private long refreshExpiration;
 
@@ -39,16 +41,7 @@ public class JwtService {
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        String token = null;
-        try {
-            token = buildToken(extraClaims, userDetails, jwtExpiration);
-            System.out.println("Generated JWT Token: " + token);
-        } catch (Exception e) {
-            e.printStackTrace();
-            // 로그 추가
-            System.out.println("JWT Token 생성 중 오류 발생: " + e.getMessage());
-        }
-        return token;
+        return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
@@ -64,13 +57,8 @@ public class JwtService {
         return buildToken(new HashMap<>(), userDetails, refreshExpiration);
     }
 
-    private String buildToken(
-            Map<String, Object> extraClaims,
-            UserDetails userDetails,
-            long expiration
-    ) {
-        return Jwts
-                .builder()
+    private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
+        return Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -84,17 +72,15 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts
-                .parserBuilder()
+        return Jwts.parser()  // parserBuilder() 대신 parser() 사용
                 .setSigningKey(getSignInKey())
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-
 }

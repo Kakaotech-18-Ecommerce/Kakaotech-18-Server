@@ -1,4 +1,4 @@
-package com.kakaoteck.golagola.dto;
+package com.kakaoteck.golagola.domain.auth.dto;
 
 import lombok.Getter;
 import lombok.Setter;
