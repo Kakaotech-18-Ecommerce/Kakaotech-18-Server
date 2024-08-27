@@ -21,6 +21,10 @@ public class UserEntity {
     private String email;
     private String role;
 
+    // 추가
+    private String RefreshToken; // JWT 리프레시 토큰 발급
+    private boolean LoginStatus; // 로그인 상태처리
+
 
 
 }

@@ -9,6 +9,8 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 // DefaultOAuth2UserService: OAuth2에서 기본적으로 유저를 저장하는 메서드를 가지고 있다.
 // super로 상속받아서 사용한다.
 // OAuth2UserRequest: 리소스 서버에서 제공되는 유저정보
@@ -41,15 +43,18 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         //리소스 서버에서 발급 받은 정보로 사용자를 특정할 아이디값을 만듬
         String username = oAuth2Response.getProvider() + " " + oAuth2Response.getProviderId();
-        UserEntity existData = userRepository.findByUsername(username);
+        Optional<UserEntity> optionalUserEntity = userRepository.findByUsername(username);
 
-        if (existData == null) {
+        // 1. 새로운 유저라면
+        if (optionalUserEntity.isEmpty()) {
 
             UserEntity userEntity = new UserEntity();
-            userEntity.setUsername(username);
-            userEntity.setEmail(oAuth2Response.getEmail());
-            userEntity.setName(oAuth2Response.getName());
-            userEntity.setRole("ROLE_USER");
+            userEntity.setUsername(username); // ex) kakao 3664463254
+            userEntity.setEmail(oAuth2Response.getEmail()); // ex) tiger1650@naver.com
+            userEntity.setName(oAuth2Response.getName()); // ex) 이용우
+            userEntity.setRole("ROLE_USER"); // ex) ROLE_USER
+
+            // 리프레시 토큰 넣기
 
             userRepository.save(userEntity);
 
@@ -59,7 +64,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             userDTO.setRole("ROLE_USER");
 
             return new CustomOAuth2User(userDTO);
-        } else {
+        }
+
+        // 2. 기존 유러라면
+        else {
+            UserEntity existData = optionalUserEntity.get();
             existData.setEmail(oAuth2Response.getEmail());
             existData.setName(oAuth2Response.getName());
 

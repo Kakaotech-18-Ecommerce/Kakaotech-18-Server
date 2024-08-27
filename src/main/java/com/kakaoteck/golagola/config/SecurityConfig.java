@@ -3,17 +3,15 @@ package com.kakaoteck.golagola.config;
 import com.kakaoteck.golagola.security.filter.JwtAuthenticationFilter;
 import com.kakaoteck.golagola.security.jwt.JWTFilter;
 import com.kakaoteck.golagola.security.jwt.JWTUtil;
-import com.kakaoteck.golagola.security.oauth2.CustomSuccessHandler;
+import com.kakaoteck.golagola.security.handler.signin.CustomSuccessHandler;
 import com.kakaoteck.golagola.service.CustomOAuth2UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -57,6 +55,9 @@ public class SecurityConfig {
             }
         }));
 
+
+
+
         // CSRF 보호 비활성화
         http.csrf(AbstractHttpConfigurer::disable);
 
@@ -68,7 +69,17 @@ public class SecurityConfig {
 
         // OAuth2 로그인 설정
         http.oauth2Login(oauth2 -> oauth2.userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
-                .successHandler(customSuccessHandler));
+                        .successHandler(customSuccessHandler)
+//                .failureHandler(oAuth2LoginFailureHandler) # 실패핸들러 추가하기
+        );
+
+        // 로그아웃 설정
+        http.logout(logout -> logout.logoutUrl("/api/v1/auth/logout")
+                //.addLogoutHandler(logoutHandler) // 지미꺼
+                .addLogoutHandler(logoutHandler) // 코이꺼
+
+                .deleteCookies("JSESSIONID", "Authorization")
+        );
 
         // JWT 필터 설정
 //        http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
@@ -81,9 +92,6 @@ public class SecurityConfig {
 
         // 세션 설정: STATELESS
         http.sessionManagement(session -> session.sessionCreationPolicy(STATELESS));
-
-        // 로그아웃 설정
-        http.logout(logout -> logout.logoutUrl("/api/v1/auth/logout").addLogoutHandler(logoutHandler));
 
         return http.build();
     }

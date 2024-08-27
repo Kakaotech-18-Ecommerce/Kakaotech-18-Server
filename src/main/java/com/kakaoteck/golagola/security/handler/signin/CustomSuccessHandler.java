@@ -1,6 +1,8 @@
-package com.kakaoteck.golagola.security.oauth2;
+package com.kakaoteck.golagola.security.handler.signin;
 
+import com.kakaoteck.golagola.domain.auth.Repository.UserRepository;
 import com.kakaoteck.golagola.domain.auth.dto.CustomOAuth2User;
+import com.kakaoteck.golagola.domain.auth.entity.UserEntity;
 import com.kakaoteck.golagola.security.jwt.JWTUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -14,13 +16,18 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Optional;
 
 @Component
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JWTUtil jwtUtil;
-    public CustomSuccessHandler(JWTUtil jwtUtil) {
+    private final UserRepository userRepository;
+
+    // AutoWired로 대체 가능한가요?
+    public CustomSuccessHandler(JWTUtil jwtUtil, UserRepository userRepository) {
         this.jwtUtil = jwtUtil;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -28,7 +35,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         //OAuth2User
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
-
         String username = customUserDetails.getUsername();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -36,9 +42,24 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
+        // JWT 생성
         String token = jwtUtil.createJwt(username, role, 60*60*60L);
 
+        // Refresh Token 생성 및 저장
+        String refreshToken = jwtUtil.createJwt(username, role, 7*24*60*60L); // 예: 7일간 유효한 리프레시 토큰
+
+        // UserEntity 업데이트
+        Optional<UserEntity> userEntityOptional = userRepository.findByUsername(username);
+        if (userEntityOptional.isPresent()) {
+            UserEntity userEntity = userEntityOptional.get();
+            userEntity.setRefreshToken(refreshToken);
+            userEntity.setLoginStatus(true); // 로그인 상태를 true로 설정
+            userRepository.save(userEntity); // 업데이트된 정보를 저장
+        }
+
+        // 쿠키 설정
         response.addCookie(createCookie("Authorization", token)); // 쿠키를 넣어준다.
+        response.addCookie(createCookie("RefreshToken", refreshToken)); // 리프레시 토큰도 쿠키로 추가
         response.sendRedirect("http://localhost:8080/"); // 프론트쪽으로 특정 uri로 리다이렉트
     }
 
