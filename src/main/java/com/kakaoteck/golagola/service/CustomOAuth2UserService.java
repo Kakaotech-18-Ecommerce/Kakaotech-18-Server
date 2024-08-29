@@ -16,7 +16,6 @@ import java.util.Optional;
 // OAuth2UserRequest: 리소스 서버에서 제공되는 유저정보
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
-
     private final UserRepository userRepository;
 
     public CustomOAuth2UserService(UserRepository userRepository) {
