@@ -5,7 +5,8 @@ import lombok.Builder;
 
 @Builder
 public record CartRequest(
-        Long productId
+        Long productId,
+        Long quantity
 
 ) {
 }

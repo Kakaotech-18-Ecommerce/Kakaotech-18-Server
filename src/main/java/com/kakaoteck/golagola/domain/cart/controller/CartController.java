@@ -31,7 +31,7 @@ public class CartController {
             @AuthenticationPrincipal Buyer buyer,
             @RequestBody CartRequest request
     ) {
-        return ApiResponse.onSuccess(cartService.addCartProduct(buyer, request.productId()));
+        return ApiResponse.onSuccess(cartService.addCartProduct(buyer, request.productId(), request.quantity()));
     }
 
     @Operation(summary = "상품 장바구니 삭제", description = "장바구니에 있는 상품 목록을 수정합니다.")
