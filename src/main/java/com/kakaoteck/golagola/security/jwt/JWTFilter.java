@@ -25,6 +25,19 @@ public class JWTFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        // jwt 기간 만료시, 무한 재로그인 방지 로직
+        String requestUri = request.getRequestURI();
+        if (requestUri.matches("^\\/login(?:\\/.*)?$")) {
+
+            filterChain.doFilter(request, response);
+            return;
+        }
+        if (requestUri.matches("^\\/oauth2(?:\\/.*)?$")) {
+
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         // cookie들을 불러온 뒤 Authorization Key에 담긴 쿠키를 찾음
         String authorization = null;
         Cookie[] cookies = request.getCookies();
@@ -38,7 +51,6 @@ public class JWTFilter extends OncePerRequestFilter {
                 }
             }
         }
-
         // Authorization 헤더 검증
         if (authorization == null) {
             System.out.println("token null");
@@ -59,6 +71,7 @@ public class JWTFilter extends OncePerRequestFilter {
         // 토큰에서 username과 role 획득
         String username = jwtUtil.getUsername(token);
         String role = jwtUtil.getRole(token);
+        System.out.println("jwtfilter jwt확인: " + username + role);
 
         // userDTO를 생성하여 값 set
         UserDTO userDTO = new UserDTO();
@@ -68,12 +81,13 @@ public class JWTFilter extends OncePerRequestFilter {
         // UserDetails에 회원 정보 객체 담기
         CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDTO);
 
-        // 스프링 시큐리티 인증 토큰 생성
+        // 스프링 시큐리티 인증 토큰 생성, 스프링 시큐리티에서 세션을 생성해가지고 토큰을 등록하고 있음.
         Authentication authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null, customOAuth2User.getAuthorities());
+
         // 세션에 사용자 등록
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
-        filterChain.doFilter(request, response);
+        filterChain.doFilter(request, response); // jwtfilter작업을 다 했기 때문에 다음 필터에게 작업을 넘긴다는 doFilter작업을 진행해주시면 됩니다.
     }
 
 }

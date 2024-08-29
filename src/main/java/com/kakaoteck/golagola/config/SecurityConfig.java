@@ -1,19 +1,20 @@
 package com.kakaoteck.golagola.config;
 
 import com.kakaoteck.golagola.security.filter.JwtAuthenticationFilter;
+import com.kakaoteck.golagola.security.handler.signout.CustomSignOutProcessHandler;
 import com.kakaoteck.golagola.security.jwt.JWTFilter;
 import com.kakaoteck.golagola.security.jwt.JWTUtil;
-import com.kakaoteck.golagola.security.oauth2.CustomSuccessHandler;
+import com.kakaoteck.golagola.security.handler.signin.CustomSuccessHandler;
 import com.kakaoteck.golagola.service.CustomOAuth2UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -36,9 +37,7 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomSuccessHandler customSuccessHandler;
     private final JWTUtil jwtUtil;
-    private final JwtAuthenticationFilter jwtAuthFilter;
-    private final AuthenticationProvider authenticationProvider;
-    private final LogoutHandler logoutHandler;
+    private final CustomSignOutProcessHandler customSignOutProcessHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -68,11 +67,21 @@ public class SecurityConfig {
 
         // OAuth2 로그인 설정
         http.oauth2Login(oauth2 -> oauth2.userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
-                .successHandler(customSuccessHandler));
+                        .successHandler(customSuccessHandler)
+//                .failureHandler(oAuth2LoginFailureHandler) # 실패핸들러 추가하기
+        );
+
+        // 로그아웃 설정
+        http.logout(logout -> logout.logoutUrl("/api/v1/auth/logout")
+                //.addLogoutHandler(logoutHandler) // 지미꺼
+                .addLogoutHandler(customSignOutProcessHandler) // 코이꺼
+                .deleteCookies("JSESSIONID", "Authorization", "RefreshToken")
+        );
 
         // JWT 필터 설정
-//        http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        http.addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
+        http.addFilterBefore(new JWTFilter(jwtUtil), LogoutFilter.class); // 로그아웃 필터전에 jwt필터실행
+        http.addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
 
         // 경로별 인가 작업
         http.authorizeHttpRequests(auth -> auth
@@ -82,14 +91,11 @@ public class SecurityConfig {
         // 세션 설정: STATELESS
         http.sessionManagement(session -> session.sessionCreationPolicy(STATELESS));
 
-        // 로그아웃 설정
-        http.logout(logout -> logout.logoutUrl("/api/v1/auth/logout").addLogoutHandler(logoutHandler));
-
         return http.build();
     }
 
     private static final String[] WHITE_LIST_URL = {
-            "/api/v1/auth/**",
+//            "/api/v1/auth/**",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",

@@ -46,4 +46,8 @@ public class CustomOAuth2User implements OAuth2User{
         return userDTO.getUsername();
     }
 
+    public Long getId() {  // id 값을 반환하는 메서드 추가
+        return userDTO.getId();
+    }
+
 }
