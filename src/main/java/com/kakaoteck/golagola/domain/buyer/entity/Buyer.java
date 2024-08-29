@@ -1,5 +1,6 @@
 package com.kakaoteck.golagola.domain.buyer.entity;
 
+import com.kakaoteck.golagola.domain.auth.entity.UserEntity;
 import com.kakaoteck.golagola.domain.buyer.dto.BuyerRequest;
 import com.kakaoteck.golagola.domain.cart.entity.Cart;
 import com.kakaoteck.golagola.domain.cart.entity.CartProduct;
@@ -29,7 +30,7 @@ import java.util.List;
 @Getter
 @Builder
 @Table(name = "buyer_table")
-public class Buyer extends BaseEntity implements UserDetails {
+public class Buyer extends UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -51,7 +51,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             userEntity.setUsername(username); // ex) kakao 3664463254
             userEntity.setEmail(oAuth2Response.getEmail()); // ex) tiger1650@naver.com
             userEntity.setName(oAuth2Response.getName()); // ex) 이용우
-            userEntity.setRole("ROLE_USER"); // ex) ROLE_USER
 
             // 리프레시 토큰 넣기
 
