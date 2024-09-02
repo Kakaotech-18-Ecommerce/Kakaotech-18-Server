@@ -1,5 +1,7 @@
 package com.kakaoteck.golagola.config;
 
+import com.kakaoteck.golagola.domain.auth.Repository.UserRepository;
+import com.kakaoteck.golagola.domain.auth.entity.UserEntity;
 import com.kakaoteck.golagola.domain.buyer.entity.Buyer;
 import com.kakaoteck.golagola.domain.buyer.repository.BuyerRepository;
 import com.kakaoteck.golagola.domain.seller.entity.Seller;
@@ -25,27 +27,26 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-    private final BuyerRepository buyerRepository;
-    private final SellerRepository sellerRepository;
+    private final UserRepository userRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
-            // Try to find the user as a Buyer
-            Buyer buyer = buyerRepository.findByEmail(username).orElse(null);
 
-            if (buyer != null) {
-                System.out.println("Buyer found: " + username);
-                return buyer;  // Buyer 객체를 반환
+            UserEntity userEntity = userRepository.findByUsername(username).orElse(null);
+
+            if (userEntity != null) {
+                System.out.println("userEntity found: " + username);
+                return userEntity;  // Buyer 객체를 반환
             }
 
             // Try to find the user as a Seller
-            Seller seller = sellerRepository.findByEmail(username).orElse(null);
+//            Seller seller = sellerRepository.findByEmail(username).orElse(null);
 
-            if (seller != null) {
-                System.out.println("Seller loaded: " + seller.getEmail());
-                return seller;  // Seller 객체를 반환
-            }
+//            if (seller != null) {
+//                System.out.println("Seller loaded: " + seller.getEmail());
+//                return seller;  // Seller 객체를 반환
+//            }
 
             throw new UsernameNotFoundException("User not found with username: " + username);
         };

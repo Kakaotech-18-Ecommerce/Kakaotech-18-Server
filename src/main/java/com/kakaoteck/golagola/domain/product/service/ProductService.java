@@ -55,7 +55,7 @@ public class ProductService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus._NOT_FOUND_PRODUCT));
 
         // 해당 상품이 현재 로그인한 seller가 등록한 것인지 확인
-        if (!product.getSeller().getSellerId().equals(seller.getSellerId())) {
+        if (!product.getSeller().getId().equals(seller.getId())) {
             throw new GeneralException(ErrorStatus._UNAUTHORIZED_ACCESS);
         }
 
@@ -96,7 +96,7 @@ public class ProductService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus._NOT_FOUND_PRODUCT));
 
         // 해당 Product가 현재 로그인된 seller가 등록한 제품인지 확인
-        if (!product.getSeller().getSellerId().equals(seller.getSellerId())) {
+        if (!product.getSeller().getId().equals(seller.getId())) {
             throw new GeneralException(ErrorStatus._UNAUTHORIZED_ACCESS);
         }
 

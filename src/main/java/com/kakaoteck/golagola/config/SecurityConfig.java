@@ -1,6 +1,5 @@
 package com.kakaoteck.golagola.config;
 
-import com.kakaoteck.golagola.security.filter.JwtAuthenticationFilter;
 import com.kakaoteck.golagola.security.handler.signout.CustomSignOutProcessHandler;
 import com.kakaoteck.golagola.security.jwt.JWTFilter;
 import com.kakaoteck.golagola.security.jwt.JWTUtil;

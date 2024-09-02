@@ -51,7 +51,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             userEntity.setUsername(username); // ex) kakao 3664463254
             userEntity.setEmail(oAuth2Response.getEmail()); // ex) tiger1650@naver.com
             userEntity.setName(oAuth2Response.getName()); // ex) 이용우
-            userEntity.setRole("ROLE_USER"); // ex) ROLE_USER
+//            userEntity.setRole("ROLE_USER"); // ex) ROLE_USER
 
             // 리프레시 토큰 넣기
 
@@ -60,7 +60,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             UserDTO userDTO = new UserDTO();
             userDTO.setUsername(username);
             userDTO.setName(oAuth2Response.getName());
-            userDTO.setRole("ROLE_USER");
+//            userDTO.setRole("ROLE_USER");
 
             return new CustomOAuth2User(userDTO);
         }
@@ -76,7 +76,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             UserDTO userDTO = new UserDTO();
             userDTO.setUsername(username);
             userDTO.setName(oAuth2Response.getName());
-            userDTO.setRole("ROLE_USER");
+//            userDTO.setRole("ROLE_USER");
 
             return new CustomOAuth2User(userDTO);
         }
