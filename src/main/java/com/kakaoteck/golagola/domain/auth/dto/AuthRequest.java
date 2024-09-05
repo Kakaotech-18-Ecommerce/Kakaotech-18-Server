@@ -1,7 +1,11 @@
 package com.kakaoteck.golagola.domain.auth.dto;
 
+import com.kakaoteck.golagola.global.common.enums.Gender;
+import com.kakaoteck.golagola.global.common.enums.Role;
+
 public record AuthRequest(
-        String email,
-        String password
+        String nickName,
+        Gender gender
+//        Role role
 ) {
 }

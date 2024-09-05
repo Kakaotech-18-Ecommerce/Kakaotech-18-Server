@@ -18,15 +18,17 @@ public class BuyerService {
     private final BuyerRepository buyerRepository;
 
     public static BuyerResponse getMyPage(Buyer buyer) {
+
+
         return BuyerResponse.builder()
-                .email(buyer.getEmail())
+                .email(buyer.getUser().getEmail())
                 .role(buyer.getRole())
                 .address(buyer.getAddress())
 //                .registerDate(buyer.getRegisterDate())
-                .realName(buyer.getUsername())
-                .gender(buyer.getGender())
-                .phoneNum(buyer.getPhoneNum())
-                .nickname(buyer.getNickname())
+                .realName(buyer.getUser().getName())
+                .gender(buyer.getUser().getGender())
+                .phoneNum(buyer.getUser().getPhoneNum())
+                .nickname(buyer.getUser().getNickname())
                 .build();
     }
 
@@ -34,14 +36,14 @@ public class BuyerService {
         buyer.updateProfile(request);
         Buyer savedBuyer = buyerRepository.save(buyer);
         return BuyerResponse.builder()
-                .email(savedBuyer.getEmail())
+                .email(savedBuyer.getUser().getEmail())
                 .role(savedBuyer.getRole())
                 .address(savedBuyer.getAddress())
 //                .registerDate(savedBuyer.getRegisterDate())
-                .realName(savedBuyer.getUsername())
-                .gender(savedBuyer.getGender())
-                .phoneNum(savedBuyer.getPhoneNum())
-                .nickname(savedBuyer.getNickname())
+                .realName(savedBuyer.getUser().getName())
+                .gender(savedBuyer.getUser().getGender())
+                .phoneNum(savedBuyer.getUser().getPhoneNum())
+                .nickname(savedBuyer.getUser().getNickname())
                 .build();
 
     }

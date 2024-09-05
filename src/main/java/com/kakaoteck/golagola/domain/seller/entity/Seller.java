@@ -30,19 +30,24 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@SuperBuilder
-//@Table(name = "seller_table")
-@DiscriminatorValue("SELLER")
-public class Seller extends UserEntity {
+//@SuperBuilder
+@Table(name = "seller_table")
+//@DiscriminatorValue("SELLER")
+public class Seller extends BaseEntity{
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long sellerId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long sellerId;
+
     private String address; //  @Column(nullable = false)
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role = Role.valueOf("SELLER");
+
+    @OneToOne // Seller는 하나의 UserEntity와만 연결됩니다.
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
 
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
     @JsonManagedReference
@@ -53,8 +58,8 @@ public class Seller extends UserEntity {
 
     public void updateProfile(SellerRequest.MyPagePutDto request) {
         this.address = request.address();
-        this.setNickname(request.nickname()); // 상위클래스인 UserEntity에 업데이트
-        this.setPhoneNum(request.phoneNum()); // 상위클래스인 UserEntity에 업데이트
+        this.user.setNickname(request.nickname()); // 참조entity에서 UserEntity에 업데이트
+        this.user.setPhoneNum(request.phoneNum()); // 참조entity에서 UserEntity에 업데이트
     }
 
 //    public static Seller from(Long sellerId, String nickname, Gender gender, String email, String password,

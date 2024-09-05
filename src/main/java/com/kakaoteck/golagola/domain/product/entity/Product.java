@@ -19,10 +19,10 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
-@SuperBuilder
+@Builder
 @Table(name = "product_table")
 public class Product extends BaseEntity {
 

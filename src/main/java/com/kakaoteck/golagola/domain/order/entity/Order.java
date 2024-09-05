@@ -17,9 +17,9 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
+@Builder
 @AllArgsConstructor
 @Getter
-@SuperBuilder
 @Table(name = "order_table") // order가 mySQL 예약어임 이슈 !
 public class Order extends BaseEntity {
 

@@ -3,12 +3,17 @@ package com.kakaoteck.golagola.service;
 import com.kakaoteck.golagola.domain.auth.Repository.UserRepository;
 import com.kakaoteck.golagola.domain.auth.dto.*;
 import com.kakaoteck.golagola.domain.auth.entity.UserEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 // DefaultOAuth2UserService: OAuth2에서 기본적으로 유저를 저장하는 메서드를 가지고 있다.
@@ -51,10 +56,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             userEntity.setUsername(username); // ex) kakao 3664463254
             userEntity.setEmail(oAuth2Response.getEmail()); // ex) tiger1650@naver.com
             userEntity.setName(oAuth2Response.getName()); // ex) 이용우
+            userEntity.setImage(oAuth2Response.getImage()); // ex) 프로필 이미지
 //            userEntity.setRole("ROLE_USER"); // ex) ROLE_USER
 
             // 리프레시 토큰 넣기
-
             userRepository.save(userEntity);
 
             UserDTO userDTO = new UserDTO();
@@ -70,6 +75,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             UserEntity existData = optionalUserEntity.get();
             existData.setEmail(oAuth2Response.getEmail());
             existData.setName(oAuth2Response.getName());
+            existData.setImage(oAuth2Response.getImage());
 
             userRepository.save(existData);
 

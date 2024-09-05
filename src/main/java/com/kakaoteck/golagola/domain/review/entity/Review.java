@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+@Builder
 @Getter
 @Table(name = "review_table")
 public class Review extends BaseEntity {

@@ -1,9 +1,12 @@
 package com.kakaoteck.golagola.domain.auth.entity;
 
+import com.kakaoteck.golagola.domain.buyer.entity.Buyer;
+import com.kakaoteck.golagola.domain.seller.entity.Seller;
 import com.kakaoteck.golagola.global.common.BaseEntity;
 import com.kakaoteck.golagola.global.common.enums.Gender;
 import com.kakaoteck.golagola.global.common.enums.Role;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,12 +20,8 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@SuperBuilder // 추가
-@NoArgsConstructor
 @Table(name = "users")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "entity_type")
-public class UserEntity extends BaseEntity implements UserDetails {
+public class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +33,7 @@ public class UserEntity extends BaseEntity implements UserDetails {
 
     private String phoneNum;
     private String nickname; // @Column(nullable = false)
+    private String image;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -42,6 +42,12 @@ public class UserEntity extends BaseEntity implements UserDetails {
     // 추가
     private String refreshToken; // JWT 리프레시 토큰 발급
     private boolean loginStatus; // 로그인 상태처리
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Seller seller;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Buyer buyer;
 
     @Override
     public boolean isAccountNonExpired() {

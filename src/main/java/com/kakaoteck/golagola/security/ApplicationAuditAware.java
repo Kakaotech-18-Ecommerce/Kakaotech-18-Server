@@ -25,10 +25,10 @@ public class ApplicationAuditAware implements AuditorAware<Long> {
 
         if (principal instanceof Seller) {
             Seller seller = (Seller) principal;
-            return Optional.ofNullable(seller.getId());
+            return Optional.ofNullable(seller.getSellerId());
         } else if (principal instanceof Buyer) {
             Buyer buyer = (Buyer) principal;
-            return Optional.ofNullable(buyer.getId());
+            return Optional.ofNullable(buyer.getBuyerId());
         } else {
             return Optional.empty();
         }
