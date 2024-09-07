@@ -1,7 +1,12 @@
 package com.kakaoteck.golagola.security.jwt;
 
+import com.kakaoteck.golagola.domain.auth.Repository.UserRepository;
 import com.kakaoteck.golagola.domain.auth.dto.CustomOAuth2User;
 import com.kakaoteck.golagola.domain.auth.dto.UserDTO;
+import com.kakaoteck.golagola.domain.auth.entity.UserEntity;
+import com.kakaoteck.golagola.domain.buyer.entity.Buyer;
+import com.kakaoteck.golagola.domain.seller.entity.Seller;
+import com.kakaoteck.golagola.global.common.enums.Role;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -13,13 +18,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
+    private final UserRepository userRepository; // UserRepository 주입
 
-    public JWTFilter(JWTUtil jwtUtil) {
+    public JWTFilter(JWTUtil jwtUtil, UserRepository userRepository) {
         this.jwtUtil = jwtUtil;
+        this.userRepository = userRepository; // UserRepository 초기화
     }
 
     @Override
@@ -70,24 +78,47 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 토큰에서 username과 role 획득
         String username = jwtUtil.getUsername(token);
+
+        // 1. username으로 데이터베이스에서 사용자 정보 조회
+        Optional<UserEntity> userEntityOptional = userRepository.findByUsername(username);
+        if (userEntityOptional.isEmpty()) {
+            filterChain.doFilter(request, response);
+            return; // 사용자 정보가 없으면 필터 종료
+        }
+
+        UserEntity userEntity = userEntityOptional.get();
+
         String role = jwtUtil.getRole(token);
         System.out.println("jwtfilter jwt확인: " + username + role);
 
         // userDTO를 생성하여 값 set
         UserDTO userDTO = new UserDTO();
         userDTO.setUsername(username);
+        userDTO.setName(userEntity.getName());
+        userDTO.setEmail(userEntity.getEmail());
+        userDTO.setNickname(userEntity.getNickname()); // 추가 정보 설정
+        userDTO.setGender(userEntity.getGender()); // 추가 정보 설정
 //        userDTO.setRole(role); // buyer, seller받아오는걸로 바꾸기
 
+        Authentication authToken = null;
+        // 연관된 1대1 매핑에 값이 존재할 때(CustomOAuth2User, buyer, seller)로 받기
+        if (userEntity.getRole() == Role.BUYER) {
+            Buyer buyer = userEntity.getBuyer();  // 1:1 매핑된 Buyer 가져오기
 
-        // UserDetails에 회원 정보 객체 담기
-        CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDTO);
+            CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDTO, userEntity);
+            authToken = new UsernamePasswordAuthenticationToken(buyer, null, customOAuth2User.getAuthoritiesForRole(Role.BUYER));  // Buyer에 맞는 권한 설정
+        }
+        else if (userEntity.getRole() == Role.SELLER){
+            Seller seller = userEntity.getSeller();  // 1:1 매핑된 Seller 가져오기
 
-        // 스프링 시큐리티 인증 토큰 생성, 스프링 시큐리티에서 세션을 생성해가지고 토큰을 등록하고 있음.
-        Authentication authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null, customOAuth2User.getAuthorities());
-
-        // 세션에 사용자 등록
-        SecurityContextHolder.getContext().setAuthentication(authToken);
-
+            CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDTO, userEntity);
+            authToken = new UsernamePasswordAuthenticationToken(seller, null, customOAuth2User.getAuthoritiesForRole(Role.SELLER));  // Seller에 맞는 권한 설정
+        }
+        else{
+            CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDTO, userEntity); // UserDetails에 회원 정보 객체 담기
+            authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null, customOAuth2User.getAuthorities()); // 스프링 시큐리티 인증 토큰 생성, 스프링 시큐리티에서 세션을 생성해가지고 토큰을 등록하고 있음.
+        }
+        SecurityContextHolder.getContext().setAuthentication(authToken); // 세션에 사용자 등록
         filterChain.doFilter(request, response); // jwtfilter작업을 다 했기 때문에 다음 필터에게 작업을 넘긴다는 doFilter작업을 진행해주시면 됩니다.
     }
 

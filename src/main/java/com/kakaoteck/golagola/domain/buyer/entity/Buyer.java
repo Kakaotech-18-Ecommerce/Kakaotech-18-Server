@@ -39,9 +39,9 @@ public class Buyer extends BaseEntity {
 
     private String address; // @Column(nullable = false)
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role = Role.valueOf("BUYER");
+//    @Enumerated(EnumType.STRING)
+//    @Column(nullable = false)
+//    private Role role = Role.valueOf("BUYER");
 
     @OneToOne(mappedBy = "buyer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Cart cart;
