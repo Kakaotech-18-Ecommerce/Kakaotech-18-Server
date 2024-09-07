@@ -12,6 +12,6 @@ public class UserDTO {
     private String name;
     private String username;
     private String email; // 엔티티의 email 추가
-    private String refreshToken; // 엔티티의 refreshToken 추가
-    private boolean loginStatus; // 엔티티의 loginStatus 추가
+//    private String refreshToken; // 엔티티의 refreshToken 추가
+//    private boolean loginStatus; // 엔티티의 loginStatus 추가
 }

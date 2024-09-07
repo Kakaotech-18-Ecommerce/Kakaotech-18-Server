@@ -19,29 +19,30 @@ public class SellerService {
 
     public SellerResponse getMyPage(Seller seller) {
         return SellerResponse.builder()
-                .email(seller.getEmail())
+                .email(seller.getUser().getEmail())
                 .role(seller.getRole())
                 .address(seller.getAddress())
-                .registerDate(seller.getRegisterDate())
-                .realName(seller.getRealName())
-                .gender(seller.getGender())
-                .phoneNum(seller.getPhoneNum())
-                .nickname(seller.getNickname())
+//                .registerDate(seller.getRegisterDate())
+                .realName(seller.getUser().getName())
+                .gender(seller.getUser().getGender())
+                .phoneNum(seller.getUser().getPhoneNum())
+                .nickname(seller.getUser().getNickname())
                 .build();
+
     }
 
     public SellerResponse updateMyPage(Seller seller, SellerRequest.MyPagePutDto request) {
         seller.updateProfile(request);
         Seller savedSeller = sellerRepository.save(seller);
         return SellerResponse.builder()
-                .email(savedSeller.getEmail())
+                .email(savedSeller.getUser().getEmail())
                 .role(savedSeller.getRole())
                 .address(savedSeller.getAddress())
-                .registerDate(savedSeller.getRegisterDate())
-                .realName(savedSeller.getRealName())
-                .gender(savedSeller.getGender())
-                .phoneNum(savedSeller.getPhoneNum())
-                .nickname(savedSeller.getNickname())
+//                .registerDate(savedSeller.getRegisterDate())
+                .realName(savedSeller.getUser().getName())
+                .gender(savedSeller.getUser().getGender())
+                .phoneNum(savedSeller.getUser().getPhoneNum())
+                .nickname(savedSeller.getUser().getNickname())
                 .build();
     }
 }
