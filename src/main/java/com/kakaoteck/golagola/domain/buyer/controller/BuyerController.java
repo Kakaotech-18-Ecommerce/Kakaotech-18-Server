@@ -1,13 +1,17 @@
 package com.kakaoteck.golagola.domain.buyer.controller;
 
 import com.kakaoteck.golagola.domain.auth.dto.CustomOAuth2User;
+import com.kakaoteck.golagola.domain.auth.dto.UserDTO;
+import com.kakaoteck.golagola.domain.auth.entity.UserEntity;
 import com.kakaoteck.golagola.domain.buyer.dto.BuyerRequest;
 import com.kakaoteck.golagola.domain.buyer.dto.BuyerResponse;
 import com.kakaoteck.golagola.domain.buyer.entity.Buyer;
 import com.kakaoteck.golagola.domain.buyer.service.BuyerService;
 import com.kakaoteck.golagola.global.common.ApiResponse;
+import com.kakaoteck.golagola.global.common.enums.Gender;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -23,31 +27,26 @@ public class BuyerController {
 
 //    @Operation(summary = "구매자 마이페이지 조회", description = "구매자의 정보를 조회합니다.")
 //    @GetMapping("/mypage")
-//    public ApiResponse<BuyerResponse> getMyPage() {
-//        // 1. jwt 세션 접근
-//        CustomOAuth2User customUser = (CustomOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        String username = customUser.getUsername();
+//    public ApiResponse<BuyerResponse> getMyPage(@AuthenticationPrincipal CustomOAuth2User customUser) {
 //
-//        return ApiResponse.onSuccess(BuyerService.getMyPage(username));
+//        UserEntity userEntity = customUser.getUserEntity();
+//        BuyerResponse buyerResponse = BuyerService.getMyPage(userEntity); // Buyer 객체를 BuyerService로 넘겨서 BuyerResponse 생성
+//        return ApiResponse.onSuccess(buyerResponse);
 //    }
 
     @Operation(summary = "구매자 마이페이지 조회", description = "구매자의 정보를 조회합니다.")
     @GetMapping("/mypage")
-    public String getMyPage(@AuthenticationPrincipal CustomOAuth2User customUser) {
-        // 1. jwt 세션 접근
-//        CustomOAuth2User customUser = (CustomOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = customUser.getUsername();
-        System.out.println("username: " + username);
-//        return ApiResponse.onSuccess(BuyerService.getMyPage(username));
-        return "good";
+    public ApiResponse<BuyerResponse> getMyPage(@AuthenticationPrincipal Buyer buyer) {
+
+//        UserEntity userEntity = customUser.getUserEntity();
+//        BuyerResponse buyerResponse = BuyerService.getMyPage(userEntity); // Buyer 객체를 BuyerService로 넘겨서 BuyerResponse 생성
+        BuyerResponse buyerResponse = BuyerService.getMyPage(buyer);
+        return ApiResponse.onSuccess(buyerResponse);
     }
 
     @Operation(summary = "구매자 마이페이지 수정", description = "구매자의 정보를 수정합니다.")
     @PutMapping("/mypage")
-    public ApiResponse<BuyerResponse> updateProfile(
-            @AuthenticationPrincipal Buyer buyer,
-            @RequestBody BuyerRequest.MyPagePutDto request
-            ) {
+    public ApiResponse<BuyerResponse> updateProfile(@AuthenticationPrincipal Buyer buyer, @RequestBody BuyerRequest.MyPagePutDto request) {
         return ApiResponse.onSuccess(buyerService.updateMyPage(buyer, request));
     }
 

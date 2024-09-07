@@ -8,13 +8,12 @@ import java.time.LocalDate;
 
 @Builder
 public record BuyerResponse(
-        String nickname,
+        String email,
+        Role role,
+        String address,
         String realName,
         Gender gender,
-        String email,
-        String address,
         String phoneNum,
-        Role role,
-        LocalDate registerDate
+        String nickname
 ) {
 }

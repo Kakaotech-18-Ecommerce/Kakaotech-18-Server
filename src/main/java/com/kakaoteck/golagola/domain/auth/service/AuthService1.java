@@ -2,6 +2,7 @@ package com.kakaoteck.golagola.domain.auth.service;
 
 import com.kakaoteck.golagola.domain.auth.Repository.UserRepository;
 import com.kakaoteck.golagola.domain.auth.dto.AuthRequest;
+import com.kakaoteck.golagola.domain.auth.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,10 @@ public class AuthService1 {
             // 3. 존재하지 않을 경우 예외 처리 또는 다른 로직 수행
             throw new IllegalArgumentException("User with username " + username + " not found.");
         });
+    }
+
+    public void saveUser(UserEntity userEntity) {
+        userRepository.save(userEntity); // UserEntity를 저장하면 Buyer/Seller도 함께 저장됨
     }
 
 

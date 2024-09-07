@@ -1,5 +1,6 @@
 package com.kakaoteck.golagola.config;
 
+import com.kakaoteck.golagola.domain.auth.Repository.UserRepository;
 import com.kakaoteck.golagola.security.handler.signout.CustomSignOutProcessHandler;
 import com.kakaoteck.golagola.security.jwt.JWTFilter;
 import com.kakaoteck.golagola.security.jwt.JWTUtil;
@@ -37,6 +38,7 @@ public class SecurityConfig {
     private final CustomSuccessHandler customSuccessHandler;
     private final JWTUtil jwtUtil;
     private final CustomSignOutProcessHandler customSignOutProcessHandler;
+    private final UserRepository userRepository; // UserRepository 추가
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -78,8 +80,8 @@ public class SecurityConfig {
         );
 
         // JWT 필터 설정
-        http.addFilterBefore(new JWTFilter(jwtUtil), LogoutFilter.class); // 로그아웃 필터전에 jwt필터실행
-        http.addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JWTFilter(jwtUtil, userRepository), LogoutFilter.class); // 로그아웃 필터전에 jwt필터실행
+        http.addFilterBefore(new JWTFilter(jwtUtil, userRepository), UsernamePasswordAuthenticationFilter.class);
 //        http.addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
 
         // 경로별 인가 작업

@@ -5,7 +5,9 @@ import com.kakaoteck.golagola.global.common.enums.Role;
 
 public record AuthRequest(
         String nickName,
-        Gender gender
-//        Role role
+        Gender gender,
+        String phoneNumber,
+        String address,
+        Role role
 ) {
 }

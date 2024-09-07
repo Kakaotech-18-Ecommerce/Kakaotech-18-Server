@@ -13,8 +13,8 @@ public record BuyerRequest(
         String email,
         String address,
         String phoneNum,
-        Role role,
-        LocalDate registerDate) {
+        Role role)
+{
 
     @Builder
     public record MyPagePutDto(
