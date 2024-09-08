@@ -28,38 +28,10 @@ public class AuthController {
 
     private final AuthService1 authService;
 
-    // 해당하는 유저에다가 추가적인 정보 저장하기
-
-//    @Operation(summary = "회원가입 추가정보 진행", description = "(nickname, gender) 저장")
-//    @PostMapping("/join")
-//    public ApiResponse<String> join(@RequestBody AuthRequest authRequest, @AuthenticationPrincipal CustomOAuth2User customUser) {
-//        String username = customUser.getUsername();
-//
-//        // 1. UserService를 통해 (nickname, gender) 저장
-//        authService.saveUserDetails(username, authRequest);
-//
-//        // 2. 기존 UserDTO를 업데이트
-//        UserDTO updatedUserDTO = customUser.getUserDTO();
-//        updatedUserDTO.setNickname(authRequest.nickName());
-//        updatedUserDTO.setGender(authRequest.gender());
-//
-//
-//        // 3. CustomOAuth2User 객체 업데이트 (UserEntity 유지)
-//        UserEntity userEntity = customUser.getUserEntity(); // 기존 UserEntity 유지
-//        CustomOAuth2User updatedCustomOAuth2User = new CustomOAuth2User(updatedUserDTO, userEntity);
-//
-//        Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedCustomOAuth2User, null, updatedCustomOAuth2User.getAuthorities());
-//
-//        // 5. SecurityContextHolder에 새로운 Authentication 객체로 업데이트
-//        SecurityContextHolder.getContext().setAuthentication(newAuth);
-//
-//        return ApiResponse.onSuccess("회원가입 성공");
-//    }
-
     @Operation(summary = "회원가입 추가정보 진행", description = "(nickname, gender, role) 저장")
     @PostMapping("/join")
     public ApiResponse<String> join(@RequestBody AuthRequest authRequest, @AuthenticationPrincipal CustomOAuth2User customUser) {
-        String username = customUser.getUsername();
+//        String username = customUser.getUsername();
 
         // 1. UserEntity 가져오기
         UserEntity userEntity = customUser.getUserEntity();
@@ -83,15 +55,12 @@ public class AuthController {
                     .address(authRequest.address())
                     .build();
             userEntity.setBuyer(buyer);  // UserEntity에 Buyer 설정
-//        } else if ("SELLER".equalsIgnoreCase(authRequest.role())) {
-//            Seller seller = Seller.builder()
-//                    .user(userEntity)
-//                    .businessName(authRequest.address()) // Seller의 추가 정보
-//                    .role(Role.SELLER)
-//                    .build();
-//            userEntity.setSeller(seller);  // UserEntity에 Seller 설정
-//            Authentication newAuth = new UsernamePasswordAuthenticationToken(seller, null, customUser.getAuthorities());
-//            SecurityContextHolder.getContext().setAuthentication(newAuth);
+        } else if (Role.SELLER == authRequest.role()) {
+            Seller seller = Seller.builder()
+                    .user(userEntity)
+                    .address(authRequest.address())
+                    .build();
+            userEntity.setSeller(seller);  // UserEntity에 Seller 설정
         } else {
             return ApiResponse.onFailure("Invalid role");
         }

@@ -30,20 +30,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-//@SuperBuilder
+@Builder
 @Table(name = "seller_table")
-//@DiscriminatorValue("SELLER")
 public class Seller extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long sellerId;
-
     private String address; //  @Column(nullable = false)
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role = Role.valueOf("SELLER");
 
     @OneToOne // Seller는 하나의 UserEntity와만 연결됩니다.
     @JoinColumn(name = "user_id", nullable = false)

@@ -101,21 +101,18 @@ public class JWTFilter extends OncePerRequestFilter {
 //        userDTO.setRole(role); // buyer, seller받아오는걸로 바꾸기
 
         Authentication authToken = null;
+        CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDTO, userEntity); // UserDetails에 회원 정보 객체 담기
         // 연관된 1대1 매핑에 값이 존재할 때(CustomOAuth2User, buyer, seller)로 받기
         if (userEntity.getRole() == Role.BUYER) {
             Buyer buyer = userEntity.getBuyer();  // 1:1 매핑된 Buyer 가져오기
-
-            CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDTO, userEntity);
             authToken = new UsernamePasswordAuthenticationToken(buyer, null, customOAuth2User.getAuthoritiesForRole(Role.BUYER));  // Buyer에 맞는 권한 설정
         }
         else if (userEntity.getRole() == Role.SELLER){
             Seller seller = userEntity.getSeller();  // 1:1 매핑된 Seller 가져오기
-
-            CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDTO, userEntity);
             authToken = new UsernamePasswordAuthenticationToken(seller, null, customOAuth2User.getAuthoritiesForRole(Role.SELLER));  // Seller에 맞는 권한 설정
         }
         else{
-            CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDTO, userEntity); // UserDetails에 회원 정보 객체 담기
+            System.out.println("여기 걸리냐/?!!!!!!");
             authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null, customOAuth2User.getAuthorities()); // 스프링 시큐리티 인증 토큰 생성, 스프링 시큐리티에서 세션을 생성해가지고 토큰을 등록하고 있음.
         }
         SecurityContextHolder.getContext().setAuthentication(authToken); // 세션에 사용자 등록
