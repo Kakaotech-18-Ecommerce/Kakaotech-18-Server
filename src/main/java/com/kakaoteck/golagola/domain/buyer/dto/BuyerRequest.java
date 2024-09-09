@@ -18,8 +18,10 @@ public record BuyerRequest(
 
     @Builder
     public record MyPagePutDto(
+            String roadAddress,
+            String zipCode,
+            String detailAdress,
             String nickname,
-            String address,
             String phoneNum
     ) {}
 }

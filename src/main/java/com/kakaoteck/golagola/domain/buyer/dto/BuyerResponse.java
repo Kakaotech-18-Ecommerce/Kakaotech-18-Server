@@ -10,7 +10,9 @@ import java.time.LocalDate;
 public record BuyerResponse(
         String email,
         Role role,
-        String address,
+        String roadAddress, // 도로명 주소
+        String zipCode, // 우편 번호
+        String detailAdress, // 세부주소
         String realName,
         Gender gender,
         String phoneNum,

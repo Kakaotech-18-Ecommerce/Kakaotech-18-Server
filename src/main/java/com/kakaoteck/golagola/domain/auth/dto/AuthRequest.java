@@ -7,7 +7,9 @@ public record AuthRequest(
         String nickName,
         Gender gender,
         String phoneNumber,
-        String address,
+        String roadAddress,
+        String zipCode,
+        String detailAdress,
         Role role
 ) {
 }
