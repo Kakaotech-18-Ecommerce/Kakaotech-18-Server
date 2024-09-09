@@ -12,7 +12,9 @@ public record SellerResponse(
         String realName,
         Gender gender,
         String email,
-        String address,
+        String roadAddress, // 도로명 주소
+        String zipCode, // 우편 번호
+        String detailAdress, // 세부주소
         String phoneNum,
         Role role,
         LocalDate registerDate

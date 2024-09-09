@@ -31,7 +31,6 @@ public class AuthController {
     @Operation(summary = "회원가입 추가정보 진행", description = "(nickname, gender, role) 저장")
     @PostMapping("/join")
     public ApiResponse<String> join(@RequestBody AuthRequest authRequest, @AuthenticationPrincipal CustomOAuth2User customUser) {
-//        String username = customUser.getUsername();
 
         // 1. UserEntity 가져오기
         UserEntity userEntity = customUser.getUserEntity();
@@ -42,7 +41,6 @@ public class AuthController {
         userEntity.setPhoneNum(authRequest.phoneNumber());
         userEntity.setRole(authRequest.role());
 
-        // 5. SecurityContextHolder에 새로운 Authentication 객체로 업데이트
         UserDTO updatedUserDTO = customUser.getUserDTO();
         updatedUserDTO.setNickname(authRequest.nickName());
         updatedUserDTO.setGender(authRequest.gender());
@@ -52,13 +50,17 @@ public class AuthController {
 
             Buyer buyer = Buyer.builder()
                     .user(userEntity)
-                    .address(authRequest.address())
+                    .roadAddress(authRequest.roadAddress())
+                    .zipCode(authRequest.zipCode())
+                    .detailAdress(authRequest.detailAdress())
                     .build();
             userEntity.setBuyer(buyer);  // UserEntity에 Buyer 설정
         } else if (Role.SELLER == authRequest.role()) {
             Seller seller = Seller.builder()
                     .user(userEntity)
-                    .address(authRequest.address())
+                    .roadAddress(authRequest.roadAddress())
+                    .zipCode(authRequest.zipCode())
+                    .detailAdress(authRequest.detailAdress())
                     .build();
             userEntity.setSeller(seller);  // UserEntity에 Seller 설정
         } else {
@@ -67,10 +69,6 @@ public class AuthController {
 
         // 4. 업데이트된 UserEntity 저장 (Cascade 옵션으로 인해 Buyer/Seller도 저장됨)
         authService.saveUser(userEntity);
-
-//        CustomOAuth2User updatedCustomOAuth2User = new CustomOAuth2User(updatedUserDTO, userEntity);
-//        Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedCustomOAuth2User, null, updatedCustomOAuth2User.getAuthorities());
-//        SecurityContextHolder.getContext().setAuthentication(newAuth);
 
         return ApiResponse.onSuccess("회원가입 성공");
     }

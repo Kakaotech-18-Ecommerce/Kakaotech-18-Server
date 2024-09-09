@@ -32,11 +32,15 @@ public class Buyer extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long buyerId;
-    private String address; // @Column(nullable = false)
+    private String roadAddress; // 도로명 주소
+    private String zipCode; // 우편 번호
+    private String detailAdress; // 세부주소
+
 
     @OneToOne // Buyer는 하나의 UserEntity와만 연결됩니다.
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
+
 
 //    @Enumerated(EnumType.STRING)
 //    @Column(nullable = false)
@@ -52,7 +56,9 @@ public class Buyer extends BaseEntity {
     private List<Order> orderList;
 
     public void updateProfile(BuyerRequest.MyPagePutDto request) {
-        this.address = request.address();
+        this.roadAddress = request.roadAddress();
+        this.zipCode = request.zipCode();
+        this.detailAdress = request.detailAdress();
         this.user.setNickname(request.nickname()); // 참조entity에서 UserEntity에 업데이트
         this.user.setPhoneNum(request.phoneNum()); // 참조entity에서 UserEntity에 업데이트
     }

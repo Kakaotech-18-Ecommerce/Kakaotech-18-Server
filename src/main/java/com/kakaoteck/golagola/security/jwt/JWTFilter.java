@@ -112,7 +112,6 @@ public class JWTFilter extends OncePerRequestFilter {
             authToken = new UsernamePasswordAuthenticationToken(seller, null, customOAuth2User.getAuthoritiesForRole(Role.SELLER));  // Seller에 맞는 권한 설정
         }
         else{
-            System.out.println("여기 걸리냐/?!!!!!!");
             authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null, customOAuth2User.getAuthorities()); // 스프링 시큐리티 인증 토큰 생성, 스프링 시큐리티에서 세션을 생성해가지고 토큰을 등록하고 있음.
         }
         SecurityContextHolder.getContext().setAuthentication(authToken); // 세션에 사용자 등록
