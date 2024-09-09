@@ -32,12 +32,11 @@ public class Buyer extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long buyerId;
+    private String address; // @Column(nullable = false)
 
     @OneToOne // Buyer는 하나의 UserEntity와만 연결됩니다.
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
-
-    private String address; // @Column(nullable = false)
 
 //    @Enumerated(EnumType.STRING)
 //    @Column(nullable = false)

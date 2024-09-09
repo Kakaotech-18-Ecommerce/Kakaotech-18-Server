@@ -1,5 +1,6 @@
 package com.kakaoteck.golagola.domain.seller.service;
 
+import com.kakaoteck.golagola.domain.auth.Repository.UserRepository;
 import com.kakaoteck.golagola.domain.seller.dto.SellerRequest;
 import com.kakaoteck.golagola.domain.seller.dto.SellerResponse;
 import com.kakaoteck.golagola.domain.seller.entity.Seller;
@@ -16,13 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class SellerService {
 
     private final SellerRepository sellerRepository;
+    private final UserRepository userRepository;
 
     public SellerResponse getMyPage(Seller seller) {
         return SellerResponse.builder()
                 .email(seller.getUser().getEmail())
-                .role(seller.getRole())
+                .role(seller.getUser().getRole())
                 .address(seller.getAddress())
-//                .registerDate(seller.getRegisterDate())
                 .realName(seller.getUser().getName())
                 .gender(seller.getUser().getGender())
                 .phoneNum(seller.getUser().getPhoneNum())
@@ -33,12 +34,15 @@ public class SellerService {
 
     public SellerResponse updateMyPage(Seller seller, SellerRequest.MyPagePutDto request) {
         seller.updateProfile(request);
+
+        // Seller 및 UserEntity 정보 저장
         Seller savedSeller = sellerRepository.save(seller);
+        userRepository.save(seller.getUser());
+
         return SellerResponse.builder()
                 .email(savedSeller.getUser().getEmail())
-                .role(savedSeller.getRole())
+                .role(savedSeller.getUser().getRole())
                 .address(savedSeller.getAddress())
-//                .registerDate(savedSeller.getRegisterDate())
                 .realName(savedSeller.getUser().getName())
                 .gender(savedSeller.getUser().getGender())
                 .phoneNum(savedSeller.getUser().getPhoneNum())

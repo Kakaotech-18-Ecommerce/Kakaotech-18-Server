@@ -40,8 +40,9 @@ public class UserEntity implements UserDetails {
     private Gender gender = Gender.valueOf("MALE");
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role = Role.valueOf("BUYER");
+//    @Column(nullable = false)
+//    private Role role = Role.valueOf("BUYER");
+    private Role role;
 
     // 추가
     private String refreshToken; // JWT 리프레시 토큰 발급
