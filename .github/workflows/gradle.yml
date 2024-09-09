@@ -21,7 +21,7 @@ jobs:
       - name: Create application.yml
         run: |
           mkdir -p src/main/resources
-          echo "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.properties
 
 #       - name: Create keystore.p12
 #         run: echo "${{ secrets.KEYSTORE_P12 }}" | base64 -d > src/main/resources/keystore.p12
