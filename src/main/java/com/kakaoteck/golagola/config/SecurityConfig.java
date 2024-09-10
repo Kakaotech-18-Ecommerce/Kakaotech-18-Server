@@ -99,12 +99,12 @@ public class SecurityConfig {
 
         // 세션 설정: STATELESS
         http.sessionManagement(session -> session.sessionCreationPolicy(STATELESS));
-
         return http.build();
     }
 
     private static final String[] WHITE_LIST_URL = {
 //            "/api/v1/auth/**",
+            "/api/v1/auth/healthcheck",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",

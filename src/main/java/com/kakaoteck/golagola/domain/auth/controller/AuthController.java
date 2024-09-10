@@ -25,9 +25,15 @@ public class AuthController {
 
     private final AuthService1 authService;
 
+    @Operation(summary = "AWS healthcheck", description = "헬스체크 api")
+    @GetMapping("/healthcheck")
+    public ApiResponse<String> healthcheck(){
+        return ApiResponse.onSuccess("로그인 성공");
+    }
+
     @Operation(summary = "로그인 됐는지 확인하기", description = "JWT필터 통과 시 로그인 성공")
     @GetMapping("/logincheck")
-    public ApiResponse<String>  logincheck(){
+    public ApiResponse<String> logincheck(){
         return ApiResponse.onSuccess("로그인 성공");
     }
 
@@ -75,5 +81,7 @@ public class AuthController {
 
         return ApiResponse.onSuccess("회원가입 성공");
     }
+
+
 
 }
