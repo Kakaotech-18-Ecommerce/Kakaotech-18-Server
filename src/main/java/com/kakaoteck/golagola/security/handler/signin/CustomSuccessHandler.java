@@ -19,7 +19,8 @@ import java.util.Iterator;
 import java.util.Optional;
 
 @Component
-public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+public class
+CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JWTUtil jwtUtil;
     private final UserRepository userRepository;
@@ -60,7 +61,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // 쿠키 설정
         response.addCookie(createCookie("Authorization", token)); // 쿠키를 넣어준다.
         response.addCookie(createCookie("RefreshToken", refreshToken)); // 리프레시 토큰도 쿠키로 추가
-        response.sendRedirect("http://localhost:3000"); // 프론트쪽으로 특정 uri로 리다이렉트
+        response.sendRedirect("http://localhost:3000?login=success"); // 프론트쪽으로 특정 uri로 리다이렉트
     }
 
     private Cookie createCookie(String key, String value) {

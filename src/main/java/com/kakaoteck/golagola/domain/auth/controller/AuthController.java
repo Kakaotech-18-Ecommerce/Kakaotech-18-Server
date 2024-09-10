@@ -16,10 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -27,6 +24,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService1 authService;
+
+    @Operation(summary = "로그인 됐는지 확인하기", description = "JWT필터 통과 시 로그인 성공")
+    @GetMapping("/logincheck")
+    public ApiResponse<String>  logincheck(){
+        return ApiResponse.onSuccess("로그인 성공");
+    }
 
     @Operation(summary = "회원가입 추가정보 진행", description = "(nickname, gender, role) 저장")
     @PostMapping("/join")

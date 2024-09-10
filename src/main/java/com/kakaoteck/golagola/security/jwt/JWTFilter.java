@@ -6,6 +6,7 @@ import com.kakaoteck.golagola.domain.auth.dto.UserDTO;
 import com.kakaoteck.golagola.domain.auth.entity.UserEntity;
 import com.kakaoteck.golagola.domain.buyer.entity.Buyer;
 import com.kakaoteck.golagola.domain.seller.entity.Seller;
+import com.kakaoteck.golagola.global.common.ApiResponse;
 import com.kakaoteck.golagola.global.common.enums.Role;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -35,13 +36,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // jwt 기간 만료시, 무한 재로그인 방지 로직
         String requestUri = request.getRequestURI();
-        if (requestUri.matches("^\\/login(?:\\/.*)?$")) {
-
-            filterChain.doFilter(request, response);
-            return;
-        }
-        if (requestUri.matches("^\\/oauth2(?:\\/.*)?$")) {
-
+        if (requestUri.matches("^\\/login(?:\\/.*)?$") || requestUri.matches("^\\/oauth2(?:\\/.*)?$")) {
             filterChain.doFilter(request, response);
             return;
         }
