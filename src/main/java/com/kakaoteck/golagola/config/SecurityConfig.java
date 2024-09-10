@@ -1,6 +1,7 @@
 package com.kakaoteck.golagola.config;
 
 import com.kakaoteck.golagola.domain.auth.Repository.UserRepository;
+import com.kakaoteck.golagola.security.handler.CustomAuthenticationEntryPoint;
 import com.kakaoteck.golagola.security.handler.signout.CustomSignOutProcessHandler;
 import com.kakaoteck.golagola.security.jwt.JWTFilter;
 import com.kakaoteck.golagola.security.jwt.JWTUtil;
@@ -39,6 +40,7 @@ public class SecurityConfig {
     private final JWTUtil jwtUtil;
     private final CustomSignOutProcessHandler customSignOutProcessHandler;
     private final UserRepository userRepository; // UserRepository 추가
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -69,7 +71,7 @@ public class SecurityConfig {
         // OAuth2 로그인 설정
         http.oauth2Login(oauth2 -> oauth2.userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
                         .successHandler(customSuccessHandler)
-//                .failureHandler(oAuth2LoginFailureHandler) # 실패핸들러 추가하기
+                    //.failureHandler(oAuth2LoginFailureHandler) // 실패핸들러 추가하기
         );
 
         // 로그아웃 설정
@@ -85,18 +87,24 @@ public class SecurityConfig {
 //        http.addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
 
         // 경로별 인가 작업
-        http.authorizeHttpRequests(auth -> auth
-                .requestMatchers(WHITE_LIST_URL).permitAll()
-                .anyRequest().authenticated());
+        http.securityMatcher("/**") // 모든 요청에 대해
+                .authorizeHttpRequests(auth -> auth
+                    .requestMatchers(WHITE_LIST_URL).permitAll()
+                    .anyRequest().authenticated()
+                )
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint(customAuthenticationEntryPoint) // 인증 실패 처리
+//                        .accessDeniedHandler(customAuthenticationEntryPoint) // 인가 실패 처리
+            );
 
         // 세션 설정: STATELESS
         http.sessionManagement(session -> session.sessionCreationPolicy(STATELESS));
-
         return http.build();
     }
 
     private static final String[] WHITE_LIST_URL = {
 //            "/api/v1/auth/**",
+            "/api/v1/auth/healthcheck",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",

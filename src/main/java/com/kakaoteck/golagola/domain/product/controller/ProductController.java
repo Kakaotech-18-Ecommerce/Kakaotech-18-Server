@@ -21,9 +21,7 @@ public class ProductController {
 
     @Operation(summary = "상품 등록", description = "상품을 등록합니다. 판매자 전용")
     @PostMapping()
-    public ApiResponse<String> postProduct(
-            @AuthenticationPrincipal Seller seller,
-            @RequestBody ProductRequest request
+    public ApiResponse<String> postProduct(@AuthenticationPrincipal Seller seller, @RequestBody ProductRequest request
     ) {
         return ApiResponse.onSuccess(productService.postProduct(seller, request));
     }
