@@ -12,7 +12,6 @@ public record ProductRequest(
         Long productPrice,
         Long productInventory,
         Category category,
-        DetailCategory detailCategory,
         Long discount,
         Long productQuantity
 ) {

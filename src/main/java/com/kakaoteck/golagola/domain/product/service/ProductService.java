@@ -34,7 +34,7 @@ public class ProductService {
                 .productPrice(request.productPrice())
                 .productInventory(request.productInventory())
                 .category(request.category())
-                .detailCategory(request.detailCategory())
+//                .detailCategory(request.detailCategory())
                 .discount(request.discount())
                 .createTime(LocalTime.now())
                 .updateTime(LocalTime.now())
@@ -67,7 +67,7 @@ public class ProductService {
                 request.productPrice(),
                 request.productInventory(),
                 request.category(),
-                request.detailCategory(),
+//                request.detailCategory(),
                 request.discount(),
                 request.productQuantity(),
                 LocalTime.now()  // updateTime을 현재 시간으로 업데이트
@@ -84,7 +84,6 @@ public class ProductService {
                 .productPrice(product.getProductPrice())
                 .productInventory(product.getProductInventory())
                 .category(product.getCategory())
-                .detailCategory(product.getDetailCategory())
                 .discount(product.getDiscount())
                 .productQuantity(product.getProductQuantity())
                 .build();

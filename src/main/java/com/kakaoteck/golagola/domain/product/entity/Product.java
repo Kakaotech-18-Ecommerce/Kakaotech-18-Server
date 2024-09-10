@@ -63,9 +63,9 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     private Category category;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private DetailCategory detailCategory;
+//    @Enumerated(EnumType.STRING)
+//    @Column(nullable = false)
+//    private DetailCategory detailCategory;
 
     @Column(nullable = false)
     private Long discount;
@@ -87,7 +87,7 @@ public class Product extends BaseEntity {
 
     // Product 수정 메서드
     public void updateProduct(String productName, String productExplanation, String productImage, Long productPrice,
-                              Long productInventory, Category category, DetailCategory detailCategory,
+                              Long productInventory, Category category,
                               Long discount, Long productQuantity, LocalTime updateTime) {
         this.productName = productName;
         this.productExplanation = productExplanation;
@@ -95,7 +95,6 @@ public class Product extends BaseEntity {
         this.productPrice = productPrice;
         this.productInventory = productInventory;
         this.category = category;
-        this.detailCategory = detailCategory;
         this.discount = discount;
         this.productQuantity = productQuantity;
         this.updateTime = updateTime;
@@ -114,7 +113,6 @@ public class Product extends BaseEntity {
                 .productPrice(productPrice)
                 .productInventory(productInventory)
                 .category(category)
-                .detailCategory(detailCategory)
                 .discount(discount)
                 .productQuantity(productQuantity)
                 .createTime(LocalTime.now())
